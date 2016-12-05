@@ -124,17 +124,22 @@ public class KIPlayer extends Player {
 	}
 	
 	public int pickMove() {
-		if (color == PlayerColor.BLACK) {
-			return alphaBetaMax(PlayerColor.BLACK, stufe, -1000, 1000);
+		ArrayList<Integer> moves = board.legalMoves();
+		if (moves.size() == 0) {
+			return -1;
 		} else {
-			return alphaBetaMin(PlayerColor.RED, stufe, -1000, 1000);
+			if (color == PlayerColor.BLACK) {
+				return alphaBetaMax(PlayerColor.BLACK, stufe, -1000, 1000);
+			} else {
+				return alphaBetaMin(PlayerColor.RED, stufe, -1000, 1000);
+			}
 		}
 	}
 
 	int minMove;
 	public int alphaBetaMin (PlayerColor color, int depth, int alpha, int beta) {
-		ArrayList<Integer> Moves = board.legalMoves();
-		if (depth == 0 || Moves.size() == 0) {
+		ArrayList<Integer> moves = board.legalMoves();
+		if (depth == 0 || moves.size() == 0) {
 			return board.getScore();
 		}
 		int minValue = beta;

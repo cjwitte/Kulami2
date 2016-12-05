@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,15 +35,12 @@ public class BoardBuilderFrame extends JFrame {
 	
 	public BoardBuilderFrame (MainFrame mainFrame) {
 		 	this.board = new Board(1);
-		 	boardPanel = new BoardPanel(600, true);
+		 	boardPanel = new BoardPanel(false);
 		 	board.print();
-	    //    this.setLayout(new BorderLayout());
-	        
-	   //  boardPanel.setEditable(true);  //TODO Variable einführen ...?
 	        TilePanel tilePanel = new TilePanel();
 	        JButton saveBtn = new JButton("save");
 	        selectedTile = null;
-	     //   tilePanel.setLayout(new FlowLayout());
+	   //   tilePanel.setLayout(new FlowLayout());
 	    /*   
 	        int size = 30;
 	        
@@ -108,18 +106,19 @@ public class BoardBuilderFrame extends JFrame {
 	        boardPanel.addMouseListeners(new RectangleAddListener());
 	       */
 	        boardPanel.readBoard(board);
-	        
 	        boardPanel.setVisible(true);
 	        this.add(saveBtn);
 	        this.add(boardPanel);
-	   //     this.add(b);
 	        this.add(tilePanel, BorderLayout.SOUTH);
 	        System.out.println(boardPanel.getSize());
 	        
-	        setSize(1000,750);
+	        for (Rectangle rectangle: boardPanel.allRectangles) {
+	        	rectangle.addMouseListener (new RectangleAddListener());
+	        }
+	        Dimension d = new Dimension(boardPanel.getPreferredSize());
+	        setSize(d.width+100, d.height+250);
 	        tilePanel.addMouseListener (new RectangleSelectListener());
-	        setResizable(false);
-	    
+	 //       setResizable(false);
 	        setVisible(true);
 	    }
 		
@@ -132,27 +131,83 @@ public class BoardBuilderFrame extends JFrame {
   
 		@Override
 		public void mouseClicked(MouseEvent me) {
-            if (selectedTile == null) {
+         //   if (selectedTile == null) {
     			int x = me.getX();
 
     			if (x >= 10 && x <= 100) {
-    				selectedTile = new Tile( "b" , 3,2);
-    				try {
-    					board.setTile(selectedTile, 1,1);
-        				boardPanel.readBoard(board);
-        				boardPanel.repaint();
-    				} catch (TileNotPlacableException e) {
-    					System.err.println("not placable");
-    				}
-    				
-    				
+    				selectedTile = board.b;
     			}
-            } else {
+    			
+    			if (x >= 110 && x <= 200) {
+    				selectedTile = board.c;
+    			}
+    			
+    			if (x >= 210 && x <= 300) {
+    				selectedTile = board.d;
+    			}
+    			
+    			if (x >= 310 && x <= 400) {
+    				selectedTile = board.e;
+    			}
+    			
+    			if (x >= 410 && x <= 470) {
+    				selectedTile = board.f;
+    			}
+    			
+    			if (x >= 480 && x <= 540) {
+    				selectedTile = board.g;
+    			}
+    			
+    			if (x >= 550 && x <= 610) {
+    				selectedTile = board.h;
+    			}
+    			
+    			if (x >= 620 && x <= 680) {
+    				selectedTile = board.i;
+    			}
+    			
+    			if (x >= 690 && x <= 720) {
+    				selectedTile = board.j;
+    			}
+    			
+    			if (x >= 760 && x <= 790) {
+    				selectedTile = board.k;
+    			}
+    			
+    			if (x >= 800 && x <= 830) {
+    				selectedTile = board.l;
+    			}
+    			
+    			if (x >= 840 && x <= 870) {
+    				selectedTile = board.m;
+    			}
+    			
+    			if (x >= 880 && x <= 910) {
+    				selectedTile = board.n;
+    			}
+    			
+    			if (x >= 920 && x <= 980) {
+    				selectedTile = board.o;
+    			}
+    			
+    			if (x >= 990 && x <= 1050) {
+    				selectedTile = board.p;
+    			}
+    			
+    			if (x >= 1060 && x <= 1120) {
+    				selectedTile = board.q;
+    			}
+    			
+    			if (x >= 1130 && x <= 1190) {
+    				selectedTile = board.r;
+    			}
+    			
+         /*   } else {
             	System.out.println("els");
                 
                 selectedTile = new Tile("b", 3, 2);
            //     tilePanel.remove(b);
-            }
+            }*/
 		}
 
 		@Override
@@ -185,14 +240,22 @@ public class BoardBuilderFrame extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			 try {
-	                String tileName = e.getSource().toString();
+	                String tileName = selectedTile.getName();
+	                System.out.println(tileName);
 	                Tile tile = board.findTile(tileName);
+	                System.out.println(tile.getName());
+	                
 	                int position = Integer.parseInt(e.getSource().toString());
 	                int y = (position - 1)/10;   //hier müssen x und y des angeklickten Feldes übernommen werden.
 	                int x = position - y*10 - 1;
+	                System.out.println("placed: " + tile.getPlaced());
 	                board.setTile(tile, x, y);   
-	                selectedRectangle = null;
-	                boardPanel.repaint();
+	                System.out.println("placed: " + tile.getPlaced());
+	           //   selectedTile = null;
+	           //   board.readBoard(board.toString());
+	                boardPanel.readBoard(board);
+	       //       boardPanel.repaint();
+	                boardPanel.getParent().revalidate();
 	            } catch (TileNotPlacableException te) {
 	                JOptionPane.showMessageDialog(boardPanel, "An dieser Stelle kann die Platte nicht platziert werden", "Inane error", JOptionPane.ERROR_MESSAGE );
 	            }

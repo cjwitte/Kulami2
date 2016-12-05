@@ -118,20 +118,21 @@ public class GameFrame extends JFrame {
 			Thread thread = new Thread () {
 				public void run() {
 					System.out.println("clicked" + source.toString());
-					if (game.getBoard().legalMoves().contains(source.number) && game.getActivePlayer() == game.getPlayer().getColorAsChar())  {
+					if (game.getBoard().legalMoves().contains(source.number) && game.getMyTurn())  {
 						System.out.println("aaaaaaaaaaaaaaaaaaaaaa");
 						source.setColor(game.getPlayer().getColor());
 						source.repaint();
 						int move = source.getNumber();
 						int y = game.getBoard().yFromPosition(move);
 						int x = game.getBoard().xFromPosition(move);
-						if (game.getMoveNeeded()) {
+			//			if (game.getMyTurn()) {
 							System.out.println("if (game.getMoveNeeded())");
 							game.communicator.setToServer("zug("+ x + "," + y + ").");
 							System.out.println("setToServer: " + game.communicator.getToServer());
 							System.out.println("toServer:" + game.communicator.getToServer());
 							game.setMoveNeeded(false);
-						}		
+							this.notify();
+				//		}		
 					}
 			}};
 			thread.start();

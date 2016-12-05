@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 public class TilePanel extends JPanel{
     
     public TilePanel () {
-    	Dimension d = new Dimension(970,120);
+    	Dimension d = new Dimension(1100,120);
     	setPreferredSize(d);
     	repaint();
     	setVisible(true);
@@ -61,19 +61,37 @@ public class TilePanel extends JPanel{
     	
     	
     	g.drawRect(410, 10, 60, 60);
-    	g.drawRect(480, 10, 60, 60);
-    	g.drawRect(550, 10, 60, 60);
-    	g.drawRect(620, 10, 60, 60);
-    
-    	g.drawRect(690, 10, 30, 90);
-    	g.drawRect(730, 10, 30, 90);
-    	g.drawRect(770, 10, 30, 90);
+    	g.drawOval(417, 15, 20, 20);
+    	g.drawOval(445, 15, 20, 20);
+    	g.drawOval(417, 40, 20, 20);
+    	g.drawOval(445, 40, 20, 20);
     	
-    	g.drawRect(810, 10, 30, 30);
-    	g.drawRect(850, 10, 30, 30);
-    	g.drawRect(890, 10, 30, 30);
-    	g.drawRect(930, 10, 30, 30);
-
+    	
+    	g.drawRect(480, 10, 60, 60);
+    	g.drawOval(487, 15, 20, 20);
+    	g.drawOval(515, 15, 20, 20);
+    	g.drawOval(487, 40, 20, 20);
+    	g.drawOval(515, 40, 20, 20);
+    	
+    	g.drawRect(550, 10, 60, 60);
+    	g.drawOval(557, 15, 20, 20);
+    	g.drawOval(585, 15, 20, 20);
+    	g.drawOval(557, 40, 20, 20);
+    	g.drawOval(585, 40, 20, 20);
+    	
+    	g.drawRect(620, 10, 60, 60);
+    	g.drawRect(690, 10, 60, 60);
+    	
+    	g.drawRect(760, 10, 30, 90);
+    	g.drawRect(800, 10, 30, 90);
+    	g.drawRect(840, 10, 30, 90);
+       	g.drawRect(880, 10, 30, 90);
+    	
+    	
+    	g.drawRect(920, 10, 60, 30);
+    	g.drawRect(990, 10, 60, 30);
+    	g.drawRect(1060, 10, 60, 30);
+    	g.drawRect(1130, 10, 60, 30);
 
         
     	

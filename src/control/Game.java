@@ -33,6 +33,7 @@ public class Game {
 	private boolean myTurn;
 	
 	private boolean shouldWrite;
+	Thread gameThread;
 	
 	public Game (int portNr, String hostname, int level, Board board, Player player) {
 		this.portNr = portNr;
@@ -45,6 +46,8 @@ public class Game {
 		this.state = 0;
 		moveNeeded = false;
 		shouldWrite = false;
+		gameThread = new Thread(communicator);
+		gameThread.start();
 	}
 	
 	public void setGameFrame(GameFrame gameFrame) {
@@ -121,7 +124,6 @@ public class Game {
 		return opponentName;
 	}
 	
-	
 	public void pickMove() {
 	}
 	
@@ -178,7 +180,18 @@ public class Game {
 						});
 					
 				} else {
-					moveNeeded = true;
+					synchronized(this.getGameFrame()) {
+						moveNeeded = true;
+						try {
+							System.out.println("I'm waiting.#");
+							wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					
 				}
 			}
 			else {
@@ -211,15 +224,17 @@ public class Game {
 				System.out.println("KI");
 				System.out.println("zweites IF");
 				int move = getPlayer().pickMove();
-				getBoard().placePiece(move, getPlayer().color);
-				int y = getBoard().yFromPosition(move);
-				int x = getBoard().xFromPosition(move);
-				communicator.setToServer("zug("+ x + ", " + y + ").");
-				SwingUtilities.invokeLater( new Runnable() {
-				public void run() {
-					gameFrame.repaint();
-						}
-				});
+				if (move!=-1) {
+					getBoard().placePiece(move, getPlayer().color);
+					int y = getBoard().yFromPosition(move);
+					int x = getBoard().xFromPosition(move);
+					communicator.setToServer("zug("+ x + ", " + y + ").");
+					SwingUtilities.invokeLater( new Runnable() {
+					public void run() {
+						gameFrame.repaint();
+							}
+					});
+				}
 			} else {
 				moveNeeded = true;
 			}

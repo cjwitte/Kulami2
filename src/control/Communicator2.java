@@ -10,6 +10,8 @@ import java.util.concurrent.BlockingQueue;
 
 import javax.swing.SwingUtilities;
 
+import test.GameTest;
+
 public class Communicator2 implements Runnable{
 	int portNr;
 	String hostName;
@@ -19,10 +21,10 @@ public class Communicator2 implements Runnable{
 	String toServer;
 	
 	
-	public Communicator2 (int portNr, String hostName, Game game ) {
+	public Communicator2 (int portNr, String hostName, Game game2 ) {
 		this.portNr = portNr;
 		this.hostName = hostName;
-		this.game = game;
+		this.game = game2;
 		this.toServer = "";
 	}
 
@@ -39,9 +41,8 @@ public class Communicator2 implements Runnable{
 		//		fromServer = in.readLine();
 				System.out.println(fromServer);
 				if (!fromServer.startsWith("message") && !fromServer.startsWith("spielermessage") ) {
-					game.handleServerInput(fromServer);
-				}
-		//		System.out.println("zwischen den if");
+					game.handleServerInput(fromServer);				}
+				System.out.println("zwischen den if");
 				if (!toServer.equals("")) {
 					System.out.println("schreibe, out: " + toServer);
 					out.println(toServer);
@@ -61,7 +62,6 @@ public class Communicator2 implements Runnable{
 				} else {
 					System.out.println(fromServer);
 				}
-		//		System.out.println("zwischen den if");
 				if (!toServer.equals("")) {
 					System.out.println("schreibe: " + toServer);
 					out.println(toServer);
@@ -72,9 +72,14 @@ public class Communicator2 implements Runnable{
 					});
 					toServer = "";
 				} else {
-					System.out.println(toServer);
 				}
 				fromServer = in.readLine();
+				if (fromServer == null) {
+					fromServer = ("");
+				}
+			}
+			if (fromServer.startsWith("spielende")) {
+				System.out.println("Spiel vorbei.");
 			}
 		}
 		 catch (UnknownHostException e1) {

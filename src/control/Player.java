@@ -86,6 +86,12 @@ public class Player {
 		this.color = PlayerColor.RED;
 		this.move = 0;
 	}
+	
+	public Player (String name, Board board) {
+		this.name = name;
+		this.board = board;
+		this.color = PlayerColor.RED;
+	}
 
 	public Player(PlayerColor color, Board board) {
 		this.score = 0;

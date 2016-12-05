@@ -8,7 +8,7 @@ import control.Tile;
 
 public class Board implements Serializable {
 	
-	int level; // 0: only Tiles count, 1: Tiles and areas count, 2: Tiles, areas and lines count
+	public int level; // 0: only Tiles count, 1: Tiles and areas count, 2: Tiles, areas and lines count
 	public String[] state;
 	private int score;
 	private int lastMove;
@@ -17,7 +17,7 @@ public class Board implements Serializable {
 	String lastMovesTile;
 	String nextToLastMovesTile;
 	ArrayList<Tile> tileList;
-	Tile a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r;
+	public Tile a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r;
 	
 	public int getScore() {
 		updateScore();
@@ -424,8 +424,8 @@ public class Board implements Serializable {
 	
 	
 	public void initTiles () {
-		a = new Tile("a", 1, 1); //TODO remove a and make setPiece() handle "a" correctly
-		b = new Tile("b", 3, 3);
+	//	a = new Tile("a", 1, 1); //TODO remove a and make setPiece() handle "a" correctly
+		b = new Tile("b", 3, 2);
 		c = new Tile("c", 3, 2);
 		d = new Tile("d", 3, 2);
 		e = new Tile("e", 3, 2);
@@ -436,14 +436,14 @@ public class Board implements Serializable {
 		j = new Tile("j", 2, 2);
 		k = new Tile("k", 1, 3);
 		l = new Tile("l", 1, 3);
-		m = new Tile("m", 3, 1);
-		n = new Tile("n", 3, 1);
-		o = new Tile("o", 1, 2);
+		m = new Tile("m", 1, 3);
+		n = new Tile("n", 1, 3);
+		o = new Tile("o", 2, 1);
 		p = new Tile("p", 2, 1);
-		q = new Tile("q", 1, 2);
+		q = new Tile("q", 2, 1);
 		r = new Tile("r", 2, 1);
 		this.tileList = new ArrayList<Tile>();
-		tileList.add(a);
+//		tileList.add(a);
 		tileList.add(b);
 		tileList.add(c);
 		tileList.add(d);
@@ -464,12 +464,13 @@ public class Board implements Serializable {
 	}
 	
 	public Tile findTile (String name) {
+		Tile matchingTile = new Tile("empty Tile", 2, 2);
 		for (Tile tile: tileList) {
 			if (tile.getName().equals(name)) {
 				return tile;
 			}
 		}
-		return new Tile("emptyTile", 0, 0);
+		return matchingTile;
 	}
 	
 	public Board copyBoard() {

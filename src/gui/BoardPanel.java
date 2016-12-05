@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseListener;
 
@@ -30,6 +31,26 @@ public class BoardPanel extends JPanel {
 	
 	public BoardPanel(int size, boolean linesVisible) {
 		this.setSize(size, size);
+		setLayout(new GridLayout(10, 10, 0, 0));
+		allRectangles = new Rectangle[100];
+		if (linesVisible) {
+			for (int i= 1; i <=100; i++) {
+				Rectangle rectangle = new Rectangle(i, true, true, true, true);
+				allRectangles[i-1] = rectangle;
+				this.add(rectangle);
+			}
+		} else {
+			for (int i= 1; i <=100; i++) {
+				Rectangle rectangle = new Rectangle(i, false, false, false, false);
+				allRectangles[i-1] = rectangle;
+				this.add(rectangle);
+			}
+		}
+		this.setVisible(true);
+	}
+	
+	public BoardPanel(boolean linesVisible) {
+		this.setPreferredSize(new Dimension(1200,750));
 		setLayout(new GridLayout(10, 10, 0, 0));
 		allRectangles = new Rectangle[100];
 		if (linesVisible) {
