@@ -64,6 +64,8 @@ public class Board implements Serializable {
 		return level;
 	}
 	
+
+	
 	public String getLevelAsString() {
 		switch(level) {
 		case 0:
@@ -144,10 +146,12 @@ public class Board implements Serializable {
 		for (int i = 0; i<200; i++) {
 			if (!state[i].equals(newBoard.substring(i, i+1))) {
 				move = i;
+				System.out.println("anders:" + i);
 			}
 		}
-		lastMoves.push(move*2-1);
-		return move*2-1;
+		
+		
+		return ((move+1)/2);
 	}
 	
 	
@@ -184,7 +188,7 @@ public class Board implements Serializable {
 				lastMovesTile = usedTile;
 				lastMoves.push(position);
 		} else {
-			System.out.println("This piece is not part of the Board."); 
+			System.out.println("This move is not legal: " + xFromPosition(position) + "" + yFromPosition(position)); 
 		}
 	}
 	

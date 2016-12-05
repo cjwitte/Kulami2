@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 
 import control.Game;
 
-public class GameFrame extends JFrame implements PropertyChangeListener {
+public class GameFrame extends JFrame {
 	
 	private Game game;
 	private boolean active;
@@ -44,6 +44,10 @@ public class GameFrame extends JFrame implements PropertyChangeListener {
 	}
 	
 	public GameFrame(Game game) {
+		this.game = game;
+	}
+	
+	public void init() {
 		playerLabel = new JLabel("Spieler: " + game.getPlayer().getName() + "Farbe: " + game.getPlayer().getColorAsChar());
 		TextField message = new TextField();
 		submitButton = new JButton("submit Move");
@@ -53,9 +57,9 @@ public class GameFrame extends JFrame implements PropertyChangeListener {
 		messagePanel.setLayout(new BorderLayout());
 		messagePanel.add(message, BorderLayout.SOUTH);
 		messagePanel.add(messageArea, BorderLayout.NORTH);
-		this.game = game;
+		
 //		game.addActivePlayerChangeListener(this);
-		game.addMoveListener(this);
+//		game.addMoveListener(this);
 		size = 800;
 		
 		boardPanel = new BoardPanel((size/4)*3);
@@ -77,6 +81,8 @@ public class GameFrame extends JFrame implements PropertyChangeListener {
 		add(messagePanel, BorderLayout.EAST);
 		displayLegalMoves();
 		setVisible(true);
+		game.setGameFrame(this);
+		displayLegalMoves();
 	}
 	
 	public void displayLegalMoves () {
@@ -108,26 +114,29 @@ public class GameFrame extends JFrame implements PropertyChangeListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("clicked");
-
 			Rectangle source = (Rectangle)e.getSource();
-			if (game.getBoard().legalMoves().contains(source.number)  ){
-				source.setColor(game.getPlayer().getColor());
-				source.repaint();
-				int move = source.getNumber();
-				game.setMove(move);
-				System.out.println("move set in game.");
-				int y = game.getBoard().yFromPosition(move);
-				int x = game.getBoard().xFromPosition(move);
-				if (game.getMoveNeeded()) {
-					System.out.println("if (game.getMoveNeeded())");
-					game.communicator.setToServer("zug("+ x + ", " + y + ").");
-					System.out.println("setToServer: " + game.communicator.getToServer());
-					game.communicator.setShouldWrite(true);
-					game.setMoveNeeded(false);
-				}	
-
-			}
+			Thread thread = new Thread () {
+				public void run() {
+					System.out.println("clicked" + source.toString());
+					if (game.getBoard().legalMoves().contains(source.number) && game.getActivePlayer() == game.getPlayer().getColorAsChar())  {
+						System.out.println("aaaaaaaaaaaaaaaaaaaaaa");
+						source.setColor(game.getPlayer().getColor());
+						source.repaint();
+						int move = source.getNumber();
+						int y = game.getBoard().yFromPosition(move);
+						int x = game.getBoard().xFromPosition(move);
+						if (game.getMoveNeeded()) {
+							System.out.println("if (game.getMoveNeeded())");
+							game.communicator.setToServer("zug("+ x + "," + y + ").");
+							System.out.println("setToServer: " + game.communicator.getToServer());
+							System.out.println("toServer:" + game.communicator.getToServer());
+							game.setMoveNeeded(false);
+						}		
+					}
+			}};
+			thread.start();
+			
+			
 			
 		}
 
@@ -155,21 +164,6 @@ public class GameFrame extends JFrame implements PropertyChangeListener {
 			
 		}
 		
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {
-	/*	System.out.println("beim Board vor if");
-		activePlayerField.setText("Spieler am Zug: " + game.getActivePlayer());
-		if (arg0.getPropertyName().equals("moveNeeded")) {
-			System.out.println("beim Board angekommen");
-			displayLegalMoves();
-			for (Rectangle rectangle: boardPanel.allRectangles) {
-				rectangle.addMouseListener(new RectangleMouseListener());
-			}
-			submitButton.addActionListener(new SubmitButtonListener());
-			System.out.println("submitButton aktiviert");
-		}*/
 	}
 
 }

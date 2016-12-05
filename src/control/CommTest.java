@@ -1,5 +1,7 @@
 package control;
 
+import javax.swing.SwingUtilities;
+
 import gui.GameFrame;
 
 public class CommTest {
@@ -9,19 +11,31 @@ public class CommTest {
 		
 		Game game = new Game(2021, "localhost", 1, board, new KIPlayer("Jon", 1, board));
 		Game game2 = new Game(2021, "localhost", 1, board, new KIPlayer("Richard", 1, board));
+	
 		Thread t1 = new Thread(game.getCommunicator());
 		t1.start();
+		
+	
+		SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					GameFrame gameFrame1 = new GameFrame(game);
+					gameFrame1.init();
+				}	
+		});
+
+		
+		
 		Thread t2 = new Thread(game2.getCommunicator());
 		t2.start();
-	//	System.err.println(game.getPlayer().getColorAsChar());
-	//	System.err.println(game2.getPlayer().getColorAsChar());
-		GameFrame gameFrame1 = new GameFrame(game);
-		gameFrame1.setVisible(true);
-		GameFrame gameFrame2 = new GameFrame(game2);
-		gameFrame2.setVisible(true);
-	//	System.err.println(game.getPlayer().getColorAsChar());
-	//	System.err.println(game2.getPlayer().getColorAsChar());
-
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				GameFrame gameFrame2 = new GameFrame(game2);
+				gameFrame2.init();
+			}	
+		});				
+			
+		
 		
 	}
 

@@ -6,22 +6,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.BlockingQueue;
+
+import javax.swing.SwingUtilities;
 
 public class Communicator2 implements Runnable{
 	int portNr;
 	String hostName;
 	Game game;
-	int state;
+	
 	String fromServer;
 	String toServer;
-	boolean shouldWrite;
+	
 	
 	public Communicator2 (int portNr, String hostName, Game game ) {
 		this.portNr = portNr;
 		this.hostName = hostName;
 		this.game = game;
-		this.state = 0;
-		this.toServer = null;
+		this.toServer = "";
 	}
 
 	@Override
@@ -32,39 +34,54 @@ public class Communicator2 implements Runnable{
 	            BufferedReader in = new BufferedReader( new InputStreamReader(socket.getInputStream()));
 				) {
 			
-			while (true) {
-				System.out.println("true");
-				fromServer = in.readLine();
-				if (fromServer != null) {
-					System.out.println("Server: " + fromServer);
-					if (fromServer.startsWith("message") || fromServer.startsWith("playerMessage")) {
-						System.out.println(fromServer);
-						toServer = null;
-					} else {
-						game.handleServerInput(fromServer);
-					}
+			while (!((fromServer=in.readLine()).startsWith("spielstart"))) {
+				System.out.println("passiert was");
+		//		fromServer = in.readLine();
+				System.out.println(fromServer);
+				if (!fromServer.startsWith("message") && !fromServer.startsWith("spielermessage") ) {
+					game.handleServerInput(fromServer);
 				}
-				if (shouldWrite && !toServer.equals(null)){
-					System.out.println("Ich schreibe jetz: " + toServer);
+		//		System.out.println("zwischen den if");
+				if (!toServer.equals("")) {
+					System.out.println("schreibe, out: " + toServer);
 					out.println(toServer);
-					shouldWrite = false;
+					toServer = "";
+				}
+			
+				if (fromServer==null) {
+					fromServer = "leer";
+				}
+			}
+			
+			while (!(fromServer).startsWith("spielende")) {
+				
+				System.out.println(fromServer);
+				if (!fromServer.startsWith("message") && !fromServer.startsWith("spielermessage") ) {
+					game.handleServerInputInGame(fromServer);
+				} else {
+					System.out.println(fromServer);
+				}
+		//		System.out.println("zwischen den if");
+				if (!toServer.equals("")) {
+					System.out.println("schreibe: " + toServer);
+					out.println(toServer);
+					SwingUtilities.invokeLater( new Runnable() {
+						public void run() {
+							game.getGameFrame().repaint();
+						}
+					});
+					toServer = "";
 				} else {
 					System.out.println(toServer);
 				}
+				fromServer = in.readLine();
 			}
-				
-			
 		}
-	
 		 catch (UnknownHostException e1) {
 				e1.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	}
-	
-	public void setState (int state ) {
-		this.state = state;
 	}
 	
 	public void setToServer (String toServer) {
@@ -73,17 +90,5 @@ public class Communicator2 implements Runnable{
 	
 	public String getToServer () {
 		return toServer;
-	}
-	
-	public int getState () {
-		return state;
-	}
-	
-	public void setShouldWrite(boolean b) {
-		shouldWrite = b;
-	}
-	
-	public boolean getShouldWrite () {
-		return shouldWrite;
 	}
 }

@@ -27,7 +27,7 @@ public class BoardBuilderFrame extends JFrame {
     private MainFrame mainFrame;
     private Board board;
     private BoardPanel boardPanel;
-    private Rectangle selectedRectangle;
+    private Tile selectedTile;
     private JPanel tilePanel;
     RectForBuilder b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r;
 
@@ -38,12 +38,12 @@ public class BoardBuilderFrame extends JFrame {
 		 	board.print();
 	    //    this.setLayout(new BorderLayout());
 	        
-	   //   boardPanel.setEditable(true);  //TODO Variable einführen ...?
-	        tilePanel = new JPanel();
+	   //  boardPanel.setEditable(true);  //TODO Variable einführen ...?
+	        TilePanel tilePanel = new TilePanel();
 	        JButton saveBtn = new JButton("save");
-	        selectedRectangle = null;
+	        selectedTile = null;
 	     //   tilePanel.setLayout(new FlowLayout());
-	       
+	    /*   
 	        int size = 30;
 	        
 	        b = new RectForBuilder("b", 60, 90);
@@ -106,15 +106,20 @@ public class BoardBuilderFrame extends JFrame {
 	        saveBtn.addActionListener( new SaveBtnListener());
 	       
 	        boardPanel.addMouseListeners(new RectangleAddListener());
-	       
+	       */
 	        boardPanel.readBoard(board);
+	        
 	        boardPanel.setVisible(true);
-	  //      this.add(saveBtn);
-	  //      this.add(boardPanel);
+	        this.add(saveBtn);
+	        this.add(boardPanel);
 	   //     this.add(b);
-	   //     this.add(tilePanel);
+	        this.add(tilePanel, BorderLayout.SOUTH);
 	        System.out.println(boardPanel.getSize());
-	        setSize(800,800);
+	        
+	        setSize(1000,750);
+	        tilePanel.addMouseListener (new RectangleSelectListener());
+	        setResizable(false);
+	    
 	        setVisible(true);
 	    }
 		
@@ -127,13 +132,26 @@ public class BoardBuilderFrame extends JFrame {
   
 		@Override
 		public void mouseClicked(MouseEvent me) {
-            if (selectedRectangle == null) {
-                selectedRectangle = (Rectangle)me.getSource();
-                tilePanel.remove(selectedRectangle);
+            if (selectedTile == null) {
+    			int x = me.getX();
+
+    			if (x >= 10 && x <= 100) {
+    				selectedTile = new Tile( "b" , 3,2);
+    				try {
+    					board.setTile(selectedTile, 1,1);
+        				boardPanel.readBoard(board);
+        				boardPanel.repaint();
+    				} catch (TileNotPlacableException e) {
+    					System.err.println("not placable");
+    				}
+    				
+    				
+    			}
             } else {
-                tilePanel.add(selectedRectangle);
-                selectedRectangle = (Rectangle)me.getSource();
-                tilePanel.remove(selectedRectangle);
+            	System.out.println("els");
+                
+                selectedTile = new Tile("b", 3, 2);
+           //     tilePanel.remove(b);
             }
 		}
 

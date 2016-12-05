@@ -1,56 +1,138 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class TilePanel extends JPanel{
-	
-    RectForBuilder b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r;
     
     public TilePanel () {
-    	    b = new RectForBuilder("b", 60, 90);
-	        c = new RectForBuilder("c", 60, 90);
-	        d = new RectForBuilder("d", 60, 90);
-	        e = new RectForBuilder("e", 60, 90);
-	        f = new RectForBuilder("f", 60, 60);
-	        g = new RectForBuilder("g", 60, 60);
-	        h = new RectForBuilder("h", 60, 60);
-	        i = new RectForBuilder("i", 60, 60);
-	        j = new RectForBuilder("j", 60, 60);
-	        k = new RectForBuilder("k", 30, 90);
-	        l = new RectForBuilder("l", 30, 90);
-	        m = new RectForBuilder("m", 30, 90);
-	        n = new RectForBuilder("n", 30, 90);
-	        o = new RectForBuilder("o", 30, 60);
-	        p = new RectForBuilder("p", 30, 60);
-	        q = new RectForBuilder("q", 30, 60);
-	        r = new RectForBuilder("r", 30, 60);
-	        
-	        add(b);
-	        add(c);
-	        add(d);
-	        add(e);
-	        add(f);
-	        add(g);
-	        add(h);
-	        add(i);
-	        add(j);
-	        add(k);
-	        add(l);
-	        add(m);
-	        add(n);
-	        add(o);
-	        add(p);
-	        add(q);
-	        add(r);
+    	Dimension d = new Dimension(970,120);
+    	setPreferredSize(d);
+    	repaint();
+    	setVisible(true);
+    	addMouseListener (new TilePanelMouseListener());
+        
     }
     
+    public void paintComponent(Graphics g) {
+    	super.paintComponent(g);
+    	g.drawRect(10, 10, 90, 60);
+    	g.drawOval(20, 15, 20, 20);
+    	g.drawOval(45, 15, 20, 20);
+    	g.drawOval(70, 15, 20, 20);
+    	g.drawOval(20, 40, 20, 20);
+    	g.drawOval(45, 40, 20, 20);
+    	g.drawOval(70, 40, 20, 20);
+    	
+    	g.drawRect(110, 10, 90, 60);
+    	g.drawOval(120, 15, 20, 20);
+    	g.drawOval(145, 15, 20, 20);
+    	g.drawOval(170, 15, 20, 20);
+    	g.drawOval(120, 40, 20, 20);
+    	g.drawOval(145, 40, 20, 20);
+    	g.drawOval(170, 40, 20, 20);
+    	
+    	g.drawRect(210, 10, 90, 60);
+    	g.drawOval(220, 15, 20, 20);
+    	g.drawOval(245, 15, 20, 20);
+    	g.drawOval(270, 15, 20, 20);
+    	g.drawOval(220, 40, 20, 20);
+    	g.drawOval(245, 40, 20, 20);
+    	g.drawOval(270, 40, 20, 20);
+    	
+    	g.drawRect(310, 10, 90, 60);
+    	g.drawOval(320, 15, 20, 20);
+    	g.drawOval(345, 15, 20, 20);
+    	g.drawOval(370, 15, 20, 20);
+    	g.drawOval(320, 40, 20, 20);
+    	g.drawOval(345, 40, 20, 20);
+    	g.drawOval(370, 40, 20, 20);
+    	
+    	
+    	
+    	g.drawRect(410, 10, 60, 60);
+    	g.drawRect(480, 10, 60, 60);
+    	g.drawRect(550, 10, 60, 60);
+    	g.drawRect(620, 10, 60, 60);
+    
+    	g.drawRect(690, 10, 30, 90);
+    	g.drawRect(730, 10, 30, 90);
+    	g.drawRect(770, 10, 30, 90);
+    	
+    	g.drawRect(810, 10, 30, 30);
+    	g.drawRect(850, 10, 30, 30);
+    	g.drawRect(890, 10, 30, 30);
+    	g.drawRect(930, 10, 30, 30);
+
+
+        
+    	
+    	
+    }
+    
+    class TilePanelMouseListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			int x = arg0.getX();
+			int y = arg0.getY();
+			if (x >= 10 && x <= 100) {
+				System.out.println("B");
+			}
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+    	
+    	
+    	
+    }
+
     public static void main (String[] args) {
     	JFrame f = new JFrame("sdf");
     	TilePanel t = new TilePanel();
-    	f.add(t);
-    	f.setSize(600, 600);
+    	
+  //  	t.repaint();
+  //  	f.setLayout(new BorderLayout());
+    	f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+    	f.add(new TilePanel());
+    	f.pack();
     	f.setVisible(true);
     }
+    
+    
+    
 
 }

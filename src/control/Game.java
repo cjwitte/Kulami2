@@ -1,6 +1,5 @@
 package control;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +8,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.TimerTask;
+
+import javax.swing.SwingUtilities;
+
+import gui.GameFrame;
 
 public class Game {
 
@@ -24,11 +27,12 @@ public class Game {
 	private int state;
 	private int move;
 	
-	private boolean shouldWrite;
+	private boolean opponentNameIsSet;
+	private boolean colorIsSet;
+	private GameFrame gameFrame;
+	private boolean myTurn;
 	
-	private PropertyChangeSupport activePlayerChange = new PropertyChangeSupport(this);
-	private PropertyChangeSupport playerColorChange = new PropertyChangeSupport(this);
-	private PropertyChangeSupport moveNeededChange = new PropertyChangeSupport(this);
+	private boolean shouldWrite;
 	
 	public Game (int portNr, String hostname, int level, Board board, Player player) {
 		this.portNr = portNr;
@@ -41,8 +45,22 @@ public class Game {
 		this.state = 0;
 		moveNeeded = false;
 		shouldWrite = false;
-		
-	//	communicator.run();
+	}
+	
+	public void setGameFrame(GameFrame gameFrame) {
+		this.gameFrame = gameFrame;
+	}
+	
+	public GameFrame getGameFrame () {
+		return gameFrame;
+	}
+	
+	public boolean getMyTurn() {
+		return myTurn;
+	}
+	
+	public void setMyTurn(boolean myTurn) {
+		this.myTurn = myTurn;
 	}
 	
 	public void setMoveNeeded(boolean needed) {
@@ -61,30 +79,6 @@ public class Game {
 		this.move = move;
 	}
 	
-	public void addMoveListener (PropertyChangeListener p) {
-		moveNeededChange.addPropertyChangeListener(p);
-	}
-	
-	public void removeMoveListener (PropertyChangeListener p) {
-		moveNeededChange.removePropertyChangeListener(p);
-	}
-	
-	public void addActivePlayerChangeListener (PropertyChangeListener p) {
-		activePlayerChange.addPropertyChangeListener(p);
-	}
-	
-	public void removeActivePlayerChangeListener (PropertyChangeListener p) {
-		activePlayerChange.removePropertyChangeListener(p);
-	}
-	
-	public void addPlayerColorChangeListener (PropertyChangeListener p) {
-		playerColorChange.addPropertyChangeListener(p);
-	}
-	
-	public void removePlayerColorChangeListener (PropertyChangeListener p) {
-		playerColorChange.removePropertyChangeListener(p);
-	}
-	
 	public int getState() {
 		return state;
 	}
@@ -101,10 +95,8 @@ public class Game {
 	public void nextPlayer() {
 		if (activePlayer == 'b' ) {
 			activePlayer = 'r';
-			activePlayerChange.firePropertyChange("activePlayer", 'b', 'r');
 		} else if (activePlayer == 'r') {
 			activePlayer = 'b';
-			activePlayerChange.firePropertyChange("activePlayer", 'r', 'b');
 		}
 		
 	}
@@ -157,71 +149,132 @@ public class Game {
 		return communicator;
 	}
 	
-	public void test() {
-		System.out.println("it works!");
+	public void run() {
+		Thread thread = new Thread(communicator);
+		thread.start();	
+		if (activePlayer == player.getColorAsChar()) {
+			System.out.println("Move needed");
+			moveNeeded = true;
+		}
 	}
 	
-	public void run() {
-		communicator.run();
+	public void handleServerInputInGame (String fromServer) {
+		if (fromServer.startsWith("spielstart(")) {
+			activePlayer = fromServer.charAt(11);
+			if (activePlayer == player.getColorAsChar()) {
+				myTurn = true;
+		//		System.out.println("Move needed");
+				if (player instanceof KIPlayer) {
+					
+						int move = getPlayer().pickMove();
+						int y = getBoard().yFromPosition(move);
+						int x = getBoard().xFromPosition(move);
+						getBoard().placePiece(move, getPlayer().color);
+						communicator.setToServer("zug("+ x + ", " + y + ").");
+						SwingUtilities.invokeLater( new Runnable() {
+							public void run() {
+								gameFrame.repaint();
+							}
+						});
+					
+				} else {
+					moveNeeded = true;
+				}
+			}
+			else {
+				myTurn = false;
+			}
+			return;
+		}
+		if (fromServer.startsWith("g\u00FDltig")) {
+			myTurn = false;
+			nextPlayer();
+		}
+		
+		if (fromServer.startsWith("zug")) {
+			move = board.findMove(fromServer.substring(4, 204));
+			System.out.println("gegnerischer Zug: " + move + " ?");
+			board.placePiece(move, player.color.reverseColor());
+	//		board.readBoard(fromServer.substring(4, 204));
+			myTurn = true;
+			nextPlayer();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					gameFrame.repaint();
+				}
+			});
+			
+	//		System.out.println("nach nextPlayer an der Reihe: " + activePlayer);
+				
+			System.out.println("Move needed");
+			if (player instanceof KIPlayer) {
+				System.out.println("KI");
+				System.out.println("zweites IF");
+				int move = getPlayer().pickMove();
+				getBoard().placePiece(move, getPlayer().color);
+				int y = getBoard().yFromPosition(move);
+				int x = getBoard().xFromPosition(move);
+				communicator.setToServer("zug("+ x + ", " + y + ").");
+				SwingUtilities.invokeLater( new Runnable() {
+				public void run() {
+					gameFrame.repaint();
+						}
+				});
+			} else {
+				moveNeeded = true;
+			}
+			
+		}
 		
 	}
 	
 	public void handleServerInput(String fromServer) {
 		if (fromServer.equals("Kulami?")) {
-			communicator.setToServer(("neuerClient(" + getPlayer().getName() + ")."));
-			communicator.setShouldWrite(true);
-			System.out.println("Kulami empfangen");
+			communicator.setToServer(("neuerClient(" + getPlayer().getName() + ")."));	
 		}
 		if (fromServer.equals("spielparameter?")) {
-			System.out.println("nach Spielparametern gefragt worden.");
 			communicator.setToServer("spielparameter(" + getBoard().toString() + ", " + getBoard().level + ").");
-			communicator.setShouldWrite(true);
 			
 		}
 		if (fromServer.startsWith("name(")) {
 			setOpponentName(fromServer.substring(5, fromServer.length()-2));
+			opponentNameIsSet = true;
 		}
 		if (fromServer.startsWith("farbe(")) {
 			player.setColor(fromServer.charAt(6));
-			System.out.println("Farbe SPieler 1 " + player.getColorAsChar());
+			System.out.println("spieler " + player.getName() + " " + player.getColorAsChar());
+			colorIsSet = true;
 		}
-		if (fromServer.startsWith("spielparemeter(")) {
+		if (fromServer.startsWith("spielparameter(")) {
 			String boardName = fromServer.substring(15, 215);
-			int intLevel = Integer.parseInt(fromServer.substring(216));
+			System.out.println(fromServer);
+			System.out.println("board: " + boardName);
+			System.out.println(fromServer.substring(216,217));
+			int intLevel = Integer.parseInt(fromServer.substring(216,217));
 			board.setLevel(intLevel);
+			System.out.println("farbe: " + fromServer.charAt(218));
 			player.setColor(fromServer.charAt(218));
-			System.out.println("Farbe Spieler 2: " + player.getColorAsChar());
 			board = new Board(boardName, intLevel);
+			System.out.println("Gegner: " + fromServer.substring(220, fromServer.length()-2));;
 			setOpponentName(fromServer.substring(220, fromServer.length()-2));
+			opponentNameIsSet = true;
+			colorIsSet = true;
 		}
 		
-		while (fromServer.startsWith("spielstart(")) {
-		//	System.out.println(player.getColorAsChar() + " spielstart erhalten");
+		if (fromServer.startsWith("spielstart(")) {
 			activePlayer = fromServer.charAt(11);
-			state = 1;
 			if (activePlayer == player.getColorAsChar()) {
-		//		System.out.println("if");
-				boolean moveNeededOld = moveNeeded;
+				System.out.println("Move needed");
 				moveNeeded = true;
-				while (moveNeeded) {
-					
-				}
-		//		moveNeededChange.firePropertyChange("moveNeeded", moveNeededOld, moveNeeded);
-		//		System.out.println("move no longer needed. toServer: " + communicator.toServer + "shouldWrite: " + communicator.shouldWrite);
-				communicator.setShouldWrite(true);
 			}
-			
-
+			return;
 		}
+
 		
 		//the game has started
 		
 		//move is not legal or it wasnt our turn
 		if (fromServer.startsWith("ung")) {
-			System.out.println(fromServer);
-		/*	if (fromServer.contains("nicht am Zug")) {
-				nextPlayer();
-			}*/
 		}
 		
 		//move was legal
@@ -232,13 +285,10 @@ public class Game {
 		
 		if (fromServer.startsWith("zug")) {
 			board.readBoard(fromServer.substring(4, 204));
-			System.out.println(fromServer.substring(4,204));
 			moveNeeded = true;
-			communicator.setShouldWrite(true);
 		}
 		
 		if (fromServer.startsWith("spielende")) {
-			communicator.setState(-1);
 			System.out.println("Spiel beendet.");
 		}
 		
