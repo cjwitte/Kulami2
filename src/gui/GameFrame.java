@@ -45,6 +45,7 @@ public class GameFrame extends JFrame {
 	
 	public GameFrame(Game game) {
 		this.game = game;
+		init();
 	}
 	
 	public void init() {
@@ -57,9 +58,7 @@ public class GameFrame extends JFrame {
 		messagePanel.setLayout(new BorderLayout());
 		messagePanel.add(message, BorderLayout.SOUTH);
 		messagePanel.add(messageArea, BorderLayout.NORTH);
-		
-//		game.addActivePlayerChangeListener(this);
-//		game.addMoveListener(this);
+	
 		size = 800;
 		
 		boardPanel = new BoardPanel((size/4)*3);
@@ -103,10 +102,6 @@ public class GameFrame extends JFrame {
 	class SubmitButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			game.getPlayer().setMove(game.getSelectedMove());
-			System.out.println(game.getSelectedMove());
-			game.getPlayer().setBlocked(false);
-		//	System.out.println("Zug(" + (game.getSelectedMove() - (((game.getSelectedMove()-1)/10)*10)-1) + ", " + (game.getSelectedMove()-1)/10 + ").");
 		}
 	}
 	
@@ -125,22 +120,16 @@ public class GameFrame extends JFrame {
 						int move = source.getNumber();
 						int y = game.getBoard().yFromPosition(move);
 						int x = game.getBoard().xFromPosition(move);
-			//			if (game.getMyTurn()) {
-							System.out.println("if (game.getMoveNeeded())");
-							game.communicator.setToServer("zug("+ x + "," + y + ").");
-							System.out.println("setToServer: " + game.communicator.getToServer());
-							System.out.println("toServer:" + game.communicator.getToServer());
-							game.setMoveNeeded(false);
-							this.notify();
-				//		}		
+						System.out.println("if (game.getMoveNeeded())");
+						game.communicator.setToServer("zug("+ x + "," + y + ").");
+						System.out.println("setToServer: " + game.communicator.getToServer());
+						System.out.println("toServer:" + game.communicator.getToServer());
+						game.setMoveNeeded(false);	
 					}
 			}};
 			thread.start();
-			
-			
-			
 		}
-
+		
 		@Override
 		public void mouseEntered(MouseEvent arg0) {
 			// TODO Auto-generated method stub

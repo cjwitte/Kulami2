@@ -184,17 +184,17 @@ public class MainFrame {
 			} else if (level.equals("2")) {
 				levelInt = 2;
 			}
-			board = new Board(levelInt);
+	//		board = new Board(levelInt);
 			Player player;
 			if (KICheckbox.getState()) {
 				player = new KIPlayer(nameTextfield.getText(), levelSlider.getValue());
 			} else {
 				player = new Player(nameTextfield.getText());
 			}
-			Game game = new Game (Integer.parseInt(portField.getText()), hostnameField.getText(), Integer.parseInt(selectLevels.getSelectedItem().toString()), new Board(levelInt), player);
+			Game game = new Game (Integer.parseInt(portField.getText()), hostnameField.getText(), Integer.parseInt(selectLevels.getSelectedItem().toString()),new Board("a0a0a0k0f0f0a0a0a0a0a0a0o0k0f0f0p0p0a0a0a0a0o0k0b0b0b0g0g0a0a0c0c0c0b0b0b0g0g0a0a0c0c0c0l0d0d0d0a0a0h0h0i0i0l0d0d0d0m0a0h0h0i0i0l0q0j0j0m0a0a0a0e0e0e0q0j0j0m0a0a0a0e0e0e0r0r0a0a0a0a0a0a0n0n0n0a0a0a0a0", 1) , player);
 			game.run();
-			board.print();
-			System.out.println("level: " + board.getLevel());
+			game.getBoard().print();
+			System.out.println("level: " + game.getBoard().getLevel());
 	//		System.out.println(player.pickMove());
 			GameFrame gameFrame = new GameFrame(game);
 			gameFrame.setVisible(true);

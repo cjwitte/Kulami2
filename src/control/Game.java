@@ -180,18 +180,7 @@ public class Game {
 						});
 					
 				} else {
-					synchronized(this.getGameFrame()) {
 						moveNeeded = true;
-						try {
-							System.out.println("I'm waiting.#");
-							wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					
-					
 				}
 			}
 			else {
@@ -206,7 +195,6 @@ public class Game {
 		
 		if (fromServer.startsWith("zug")) {
 			move = board.findMove(fromServer.substring(4, 204));
-			System.out.println("gegnerischer Zug: " + move + " ?");
 			board.placePiece(move, player.color.reverseColor());
 	//		board.readBoard(fromServer.substring(4, 204));
 			myTurn = true;
@@ -217,12 +205,8 @@ public class Game {
 				}
 			});
 			
-	//		System.out.println("nach nextPlayer an der Reihe: " + activePlayer);
 				
-			System.out.println("Move needed");
 			if (player instanceof KIPlayer) {
-				System.out.println("KI");
-				System.out.println("zweites IF");
 				int move = getPlayer().pickMove();
 				if (move!=-1) {
 					getBoard().placePiece(move, getPlayer().color);
@@ -300,6 +284,11 @@ public class Game {
 		
 		if (fromServer.startsWith("zug")) {
 			board.readBoard(fromServer.substring(4, 204));
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					gameFrame.revalidate();
+				}
+			});
 			moveNeeded = true;
 		}
 		

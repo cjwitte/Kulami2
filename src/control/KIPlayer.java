@@ -17,6 +17,10 @@ public class KIPlayer extends Player {
 		this.board = board;
 	}
 	
+	public KIPlayer (String name, int stufe) {
+		super(name);
+		this.stufe = stufe;
+	}
 	public KIPlayer(PlayerColor color, Board board, int stufe) {
 		super(color, board);
 		this.board = board;
@@ -24,6 +28,10 @@ public class KIPlayer extends Player {
 	}
 	
 	private int stufe;
+	
+	public void setBoard (Board board) {
+		this.board = board;
+	}
 	
 	public void setColor ( PlayerColor color) {
 		this.color = color;

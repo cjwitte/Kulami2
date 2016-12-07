@@ -37,12 +37,10 @@ public class Communicator2 implements Runnable{
 				) {
 			
 			while (!((fromServer=in.readLine()).startsWith("spielstart"))) {
-				System.out.println("passiert was");
 		//		fromServer = in.readLine();
 				System.out.println(fromServer);
 				if (!fromServer.startsWith("message") && !fromServer.startsWith("spielermessage") ) {
 					game.handleServerInput(fromServer);				}
-				System.out.println("zwischen den if");
 				if (!toServer.equals("")) {
 					System.out.println("schreibe, out: " + toServer);
 					out.println(toServer);
@@ -57,11 +55,11 @@ public class Communicator2 implements Runnable{
 			while (!(fromServer).startsWith("spielende")) {
 				
 				System.out.println(fromServer);
-				if (!fromServer.startsWith("message") && !fromServer.startsWith("spielermessage") ) {
+		//		if (!fromServer.startsWith("message") && !fromServer.startsWith("spielermessage") ) {
 					game.handleServerInputInGame(fromServer);
-				} else {
+			/*	} else {
 					System.out.println(fromServer);
-				}
+				}*/
 				if (!toServer.equals("")) {
 					System.out.println("schreibe: " + toServer);
 					out.println(toServer);
@@ -71,8 +69,7 @@ public class Communicator2 implements Runnable{
 						}
 					});
 					toServer = "";
-				} else {
-				}
+				} 
 				fromServer = in.readLine();
 				if (fromServer == null) {
 					fromServer = ("");

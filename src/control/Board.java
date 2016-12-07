@@ -31,7 +31,7 @@ public class Board implements Serializable {
 		for (int i = 0; i< tile.getVertical() ; i++) {
 			int pos = position*2-2+i*20;
 			for (int j = 0; j<= tile.getHorizontal(); j+=2) {
-				//TODO sicherstellen, dass hier keine IndexOutOfBoundsExc auftriff
+				//TODO sicherstellen, dass hier keine IndexOutOfBoundsExc auftritt
 				if (!this.state[pos+j].equals("a")) {
 					free = false;
 				}
@@ -93,20 +93,11 @@ public class Board implements Serializable {
 		for (int i = 1; i <200; i+=2) {
 			this.state[i] = "0";
 		}
-		
-	/*	this.lastMove = -1;
-		this.nextToLastMove = -1;
-		this.nextToLastMovesTile = "";
-		this.lastMovesTile = "";*/
 	}
 	
 	public Board(String state, int level) {
 		this.state = new String[200];
 		this.initTiles();
-	/*	this.lastMove = -1;
-		this.nextToLastMove = -1;
-		this.nextToLastMovesTile = "a";
-		this.lastMovesTile = "a";*/
 		for (int i =0; i<200; i++) {
 			this.state[i] = state.substring(i, i+1);
 			Tile selectedTile = this.findTile(this.state[i]);
@@ -149,8 +140,6 @@ public class Board implements Serializable {
 				System.out.println("anders:" + i);
 			}
 		}
-		
-		
 		return ((move+1)/2);
 	}
 	
@@ -308,7 +297,6 @@ public class Board implements Serializable {
 			boolean matching = true;
 			while (xFromPosition(checking)<9 && yFromPosition(checking)<9 && matching==true) {
 				if (state[ownerFromPosition(checking)].equals(state[ownerFromPosition(checking+11)]) && state[ownerFromPosition(checking)].equals(color.toString()) && !state[ownerFromPosition(checking)].equals("0") && !matchedToRight[checking+11]) {
-				//	System.out.println("Match gefunden: " + checking + ", " + (checking+11));
 					currentLine+=1;
 					checking+=11;
 					matchedToRight[checking] = true;
@@ -319,8 +307,6 @@ public class Board implements Serializable {
 			}
 			if (currentLine>3) {
 				allLines = allLines + currentLine;
-			//	System.out.println("allLines erhöht, nach rechts: " + allLines);
-			//	System.out.println(checking);
 			}
 		}
 		
@@ -331,20 +317,15 @@ public class Board implements Serializable {
 			boolean matching = true;
 			while (xFromPosition(checking)>0 && yFromPosition(checking)<9 && matching == true) {
 				if (state[ownerFromPosition(checking)].equals(state[ownerFromPosition(checking+9)]) && state[ownerFromPosition(checking)].equals(color.toString()) && !state[ownerFromPosition(checking)].equals("0") && !matchedToLeft[checking+9]) {
-		//			System.out.println("Match gefunden, nach links:  " + checking + ", " + (checking+9));
 					currentLine+=1;
 					checking+=9;
 					matchedToLeft[checking] = true;
 				} else {
 					matching = false;
 				}
-
 			}
-			if (currentLine>3) {
-
+			if (currentLine>4) {
 				allLines = allLines + currentLine;
-		//		System.out.println("allLines erhöht: " + allLines);
-		//		System.out.println(checking);
 			}
 		}
 		return allLines;
@@ -354,7 +335,6 @@ public class Board implements Serializable {
 	private boolean[] areaChecked = new boolean[100];
 	
 	public int findArea (int position) {
-	//	boolean[] checked = new boolean[100];
 		System.out.println("position: " + position);
 		int currentArea = 1;
 		int up = position -10;
@@ -369,11 +349,6 @@ public class Board implements Serializable {
 		/*else if (xFromPosition(position)==9 && state[place].equals(state[place+2]) && !areaChecked[position-10]) {
 			currentArea++;
 		}*/
-		System.out.println("state oben. " + state[ownerFromPosition(position)]);
-		System.out.println("state unten: " + state[ownerFromPosition(position+10)]);
-//		System.out.println("position: "+ position);
-//		System.out.println("positoni + 10: " +(position+10));
-//		System.out.println(!areaChecked[position+10]);
 		if (yFromPosition(position)<9 && state[ownerFromPosition(position)].equals(state[ownerFromPosition((position+10))]) && !areaChecked[position+10]) {			
 			
 			int newPosition = position+10;
@@ -406,25 +381,9 @@ public class Board implements Serializable {
 		return currentArea;
 	}
 	
-	/*
-	public int findBiggestArea (PlayerColor playerColor) {
-		boolean[] checked = new boolean[100];
-		int currentArea = 0;
-		for (int i = 1; i <=200; i++) {
-			checked[i] = true;
-			if (xFromPosition(i)<9) {
-				if (state[ownerFromPosition(i)].equals(state[ownerFromPosition(1+1)])) {
-					currentArea += 
-				}
-			}
-			
-		}
-	}
-	*/
 	
 	
 	public void initTiles () {
-	//	a = new Tile("a", 1, 1); //TODO remove a and make setPiece() handle "a" correctly
 		b = new Tile("b", 3, 2);
 		c = new Tile("c", 3, 2);
 		d = new Tile("d", 3, 2);
@@ -443,7 +402,6 @@ public class Board implements Serializable {
 		q = new Tile("q", 2, 1);
 		r = new Tile("r", 2, 1);
 		this.tileList = new ArrayList<Tile>();
-//		tileList.add(a);
 		tileList.add(b);
 		tileList.add(c);
 		tileList.add(d);
@@ -496,6 +454,4 @@ public class Board implements Serializable {
 			
 		}
 	}
-	
-
 }

@@ -40,71 +40,7 @@ public class BoardBuilderFrame extends JFrame {
 	        TilePanel tilePanel = new TilePanel();
 	        JButton saveBtn = new JButton("save");
 	        selectedTile = null;
-	   //   tilePanel.setLayout(new FlowLayout());
-	    /*   
-	        int size = 30;
-	        
-	        b = new RectForBuilder("b", 60, 90);
-	        c = new RectForBuilder("c", 60, 90);
-	        d = new RectForBuilder("d", 60, 90);
-	        e = new RectForBuilder("e", 60, 90);
-	        f = new RectForBuilder("f", 60, 60);
-	        g = new RectForBuilder("g", 60, 60);
-	        h = new RectForBuilder("h", 60, 60);
-	        i = new RectForBuilder("i", 60, 60);
-	        j = new RectForBuilder("j", 60, 60);
-	        k = new RectForBuilder("k", 30, 90);
-	        l = new RectForBuilder("l", 30, 90);
-	        m = new RectForBuilder("m", 30, 90);
-	        n = new RectForBuilder("n", 30, 90);
-	        o = new RectForBuilder("o", 30, 60);
-	        p = new RectForBuilder("p", 30, 60);
-	        q = new RectForBuilder("q", 30, 60);
-	        r = new RectForBuilder("r", 30, 60);
-	        
-	        b.repaint();
-	        
-	        add(b);
-	        add(c);
-	        add(d);
-	        add(e);
-	        add(f);
-	        add(g);
-	        add(h);
-	        add(i);
-	        add(j);
-	        add(k);
-	        add(l);
-	        add(m);
-	        add(n);
-	        add(o);
-	        add(p);
-	        add(q);
-	        add(r);
-	       
-	        
-	        b.addMouseListener (new RectangleSelectListener());
-	        c.addMouseListener (new RectangleSelectListener());
-	        d.addMouseListener (new RectangleSelectListener());
-	        e.addMouseListener (new RectangleSelectListener());
-	        f.addMouseListener (new RectangleSelectListener());
-	        g.addMouseListener (new RectangleSelectListener());
-	        h.addMouseListener (new RectangleSelectListener());
-	        i.addMouseListener (new RectangleSelectListener());
-	        j.addMouseListener (new RectangleSelectListener());
-	        k.addMouseListener (new RectangleSelectListener());
-	        l.addMouseListener (new RectangleSelectListener());
-	        m.addMouseListener (new RectangleSelectListener());
-	        n.addMouseListener (new RectangleSelectListener());
-	        o.addMouseListener (new RectangleSelectListener());
-	        p.addMouseListener (new RectangleSelectListener());
-	        q.addMouseListener (new RectangleSelectListener());
-	        r.addMouseListener (new RectangleSelectListener());
-	           
-	        saveBtn.addActionListener( new SaveBtnListener());
-	       
-	        boardPanel.addMouseListeners(new RectangleAddListener());
-	       */
+	  
 	        boardPanel.readBoard(board);
 	        boardPanel.setVisible(true);
 	        this.add(saveBtn);
@@ -115,10 +51,10 @@ public class BoardBuilderFrame extends JFrame {
 	        for (Rectangle rectangle: boardPanel.allRectangles) {
 	        	rectangle.addMouseListener (new RectangleAddListener());
 	        }
+	        
 	        Dimension d = new Dimension(boardPanel.getPreferredSize());
 	        setSize(d.width+100, d.height+250);
 	        tilePanel.addMouseListener (new RectangleSelectListener());
-	 //       setResizable(false);
 	        setVisible(true);
 	    }
 		
@@ -202,12 +138,6 @@ public class BoardBuilderFrame extends JFrame {
     				selectedTile = board.r;
     			}
     			
-         /*   } else {
-            	System.out.println("els");
-                
-                selectedTile = new Tile("b", 3, 2);
-           //     tilePanel.remove(b);
-            }*/
 		}
 
 		@Override
@@ -241,20 +171,14 @@ public class BoardBuilderFrame extends JFrame {
 		public void mouseClicked(MouseEvent e) {
 			 try {
 	                String tileName = selectedTile.getName();
-	                System.out.println(tileName);
 	                Tile tile = board.findTile(tileName);
-	                System.out.println(tile.getName());
 	                
 	                int position = Integer.parseInt(e.getSource().toString());
 	                int y = (position - 1)/10;   //hier müssen x und y des angeklickten Feldes übernommen werden.
 	                int x = position - y*10 - 1;
-	                System.out.println("placed: " + tile.getPlaced());
 	                board.setTile(tile, x, y);   
-	                System.out.println("placed: " + tile.getPlaced());
 	           //   selectedTile = null;
-	           //   board.readBoard(board.toString());
 	                boardPanel.readBoard(board);
-	       //       boardPanel.repaint();
 	                boardPanel.getParent().revalidate();
 	            } catch (TileNotPlacableException te) {
 	                JOptionPane.showMessageDialog(boardPanel, "An dieser Stelle kann die Platte nicht platziert werden", "Inane error", JOptionPane.ERROR_MESSAGE );

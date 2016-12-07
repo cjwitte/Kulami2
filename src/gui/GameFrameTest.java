@@ -13,10 +13,10 @@ public class GameFrameTest {
 	
 		
 		gameFrame.setVisible(true);
-		gameFrame.getGame().getBoard().placePiece(4, gameFrame.getGame().getPlayer().color);
+	/*	gameFrame.getGame().getBoard().placePiece(4, gameFrame.getGame().getPlayer().color);
 		gameFrame.boardPanel.readBoard(gameFrame.getGame().getBoard());
 		System.out.println(gameFrame.getGame().getBoard().legalMoves());
-		gameFrame.repaint();
+		gameFrame.repaint();*/
 	}
 
 }

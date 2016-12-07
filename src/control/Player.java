@@ -18,8 +18,6 @@ public class Player {
 		return name;
 	}
 	
-	
-	
 	public void setMove(int move) {
 		this.move = move;
 	}
