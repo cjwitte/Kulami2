@@ -11,24 +11,28 @@ public class Player {
 	private Board board;
 	private String name;
 	private int move;
+	
+	public Player (String name) {
+		this.name = name;
+		this.color = PlayerColor.RED;
+		this.move = 0;
+	}
+	
+	public Player (String name, Board board) {
+		this.name = name;
+		this.board = board;
+		this.color = PlayerColor.RED;
+	}
 
-	private boolean blocked;
+	public Player(PlayerColor color, Board board) {
+		this.score = 0;
+		this.color = color;
+		this.board = board;
+	}
 	
 	public String getName() {
 		return name;
 	}
-	
-	public void setMove(int move) {
-		this.move = move;
-	}
-	
-	public int pickMove() {
-		return move;
-	}
-	
-	public void sendMove(int x, int y) {}
-	
-	public void sendMessage(String message) {}
 	
 	public void setScore(int score) {
 		this.score = score;
@@ -38,14 +42,6 @@ public class Player {
 		return score;
 	}
 	
-	public void setBlocked(boolean b) {
-		blocked = b;
-	}
-	
-	public boolean getBlocked() {
-		return blocked;
-	}
-		
 	public void setColor (PlayerColor color) {
 		this.color = color;
 	}
@@ -79,22 +75,6 @@ public class Player {
 		return color.toColor();
 	}
 	
-	public Player (String name) {
-		this.name = name;
-		this.color = PlayerColor.RED;
-		this.move = 0;
-	}
-	
-	public Player (String name, Board board) {
-		this.name = name;
-		this.board = board;
-		this.color = PlayerColor.RED;
-	}
 
-	public Player(PlayerColor color, Board board) {
-		this.score = 0;
-		this.color = color;
-		this.board = board;
-	}
 	
 }
