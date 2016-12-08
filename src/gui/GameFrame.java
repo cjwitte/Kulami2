@@ -11,6 +11,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,18 +24,13 @@ import control.Game;
 public class GameFrame extends JFrame {
 	
 	private Game game;
-	private boolean active;
 	int size;
+	private int move;
 	BoardPanel boardPanel;
 	TextField activePlayerField;
 	private JButton submitButton;
 	private JPanel messagePanel;
 	private JLabel playerLabel;
-	
-	
-	public void setActive(boolean active) {
-		this.active = active;
-	}
 	
 	public Game getGame() {
 		return game;
@@ -69,19 +66,23 @@ public class GameFrame extends JFrame {
 		
 		boardPanel.setLayout(new GridLayout(10,10,0,0));
 		
-		for (Rectangle rectangle: boardPanel.allRectangles) {
-			rectangle.addMouseListener(new RectangleMouseListener());
-		}
-		
 		add(playerLabel, BorderLayout.WEST);
 		add(activePlayerField, BorderLayout.NORTH);
 		add(boardPanel, BorderLayout.CENTER);
 		add(submitButton, BorderLayout.SOUTH);
 		add(messagePanel, BorderLayout.EAST);
 		displayLegalMoves();
+		for (Rectangle rectangle: boardPanel.allRectangles) {
+			rectangle.addMouseListener(new RectangleMouseListener());
+		}
 		setVisible(true);
 		game.setGameFrame(this);
 		displayLegalMoves();
+	}
+	
+	public void update (Game game, Object obj) {
+		System.out.println("update aufgerufen");
+
 	}
 	
 	public void displayLegalMoves () {
@@ -102,6 +103,7 @@ public class GameFrame extends JFrame {
 	class SubmitButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			//TODO implement SubmitButtonListener
 		}
 	}
 	
@@ -113,18 +115,18 @@ public class GameFrame extends JFrame {
 			Thread thread = new Thread () {
 				public void run() {
 					System.out.println("clicked" + source.toString());
+					System.out.println("myTurn: " + game.getMyTurn());
 					if (game.getBoard().legalMoves().contains(source.number) && game.getMyTurn())  {
-						System.out.println("aaaaaaaaaaaaaaaaaaaaaa");
+		
 						source.setColor(game.getPlayer().getColor());
 						source.repaint();
-						int move = source.getNumber();
+						move = source.getNumber();
+						
 						int y = game.getBoard().yFromPosition(move);
 						int x = game.getBoard().xFromPosition(move);
-						System.out.println("if (game.getMoveNeeded())");
+						System.out.println("Writing: " + "zug("+ x + "," + y + ").");
 						game.communicator.setToServer("zug("+ x + "," + y + ").");
-						System.out.println("setToServer: " + game.communicator.getToServer());
-						System.out.println("toServer:" + game.communicator.getToServer());
-						game.setMoveNeeded(false);	
+						game.nextPlayer();
 					}
 			}};
 			thread.start();

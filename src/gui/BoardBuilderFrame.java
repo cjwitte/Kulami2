@@ -34,7 +34,7 @@ public class BoardBuilderFrame extends JFrame {
 
 	
 	public BoardBuilderFrame (MainFrame mainFrame) {
-		 	this.board = new Board(1);
+		 	this.board = new Board();
 		 	boardPanel = new BoardPanel(false);
 		 	board.print();
 	        TilePanel tilePanel = new TilePanel();

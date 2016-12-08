@@ -7,13 +7,17 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Observable;
 import java.util.TimerTask;
 
 import javax.swing.SwingUtilities;
 
 import gui.GameFrame;
+import gui.MainFrame;
+import javafx.beans.InvalidationListener;
 
-public class Game {
+
+public class Game extends Observable {
 
 	private int portNr;
 	private String hostname;
@@ -24,10 +28,13 @@ public class Game {
 	private char activePlayer;
 	private boolean moveNeeded;
 	private int level;
+	private int score;
+	private int move;
 	
 	private boolean opponentNameIsSet;
 	private boolean colorIsSet;
 	private GameFrame gameFrame;
+
 	private boolean myTurn;
 	
 	private boolean shouldWrite;
@@ -43,8 +50,12 @@ public class Game {
 		this.activePlayer = player.getColorAsChar();
 		moveNeeded = false;
 		shouldWrite = false;
+		System.out.println("game with Player " + player.getName() + "constructed");
+		GameFrame gameFrame = new GameFrame(this);
+		gameFrame.setVisible(false);
 		gameThread = new Thread(communicator);
 		gameThread.start();
+		System.out.println("game with Player " + player.getName() + "started");
 	}
 	
 	public void setGameFrame(GameFrame gameFrame) {
@@ -70,8 +81,10 @@ public class Game {
 	public void nextPlayer() {
 		if (activePlayer == 'b' ) {
 			activePlayer = 'r';
+			System.out.println("nextPlayer: r");
 		} else if (activePlayer == 'r') {
 			activePlayer = 'b';
+			System.out.println("nextPlayer: b");
 		}
 		
 	}
@@ -122,26 +135,36 @@ public class Game {
 	}
 	
 	public void handleServerInputInGame (String fromServer) {
+		System.out.println("in Game");
 		if (fromServer.startsWith("spielstart(")) {
 			activePlayer = fromServer.charAt(11);
+			System.out.println(player.getName());
+			System.out.println("activePlayer: " + activePlayer);
+			System.out.println("player.getColorAsChar(); " + player.getColorAsChar());
+			
 			if (activePlayer == player.getColorAsChar()) {
 				myTurn = true;
-		//		System.out.println("Move needed");
+				System.out.println("Move needed: " + player.getName());
 				if (player instanceof KIPlayer) {
 					
-						int move = getPlayer().pickMove();
+						move = getPlayer().pickMove();
 						int y = getBoard().yFromPosition(move);
 						int x = getBoard().xFromPosition(move);
-						getBoard().placePiece(move, getPlayer().color);
+
+						board.placePiece(move, getPlayer().color);
+						
 						communicator.setToServer("zug("+ x + ", " + y + ").");
 						SwingUtilities.invokeLater( new Runnable() {
 							public void run() {
-								gameFrame.repaint();
+								gameFrame.revalidate();
 							}
 						});
 					
 				} else {
+						System.out.println("else no KI");
 						moveNeeded = true;
+						setChanged();
+						notifyObservers();
 				}
 			}
 			else {
@@ -152,6 +175,7 @@ public class Game {
 		if (fromServer.startsWith("g\u00FDltig")) {
 			myTurn = false;
 			nextPlayer();
+			
 		}
 		
 		if (fromServer.startsWith("zug")) {
@@ -162,13 +186,13 @@ public class Game {
 			nextPlayer();
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					gameFrame.repaint();
+					gameFrame.revalidate();
 				}
 			});
 			
 				
 			if (player instanceof KIPlayer) {
-				int move = getPlayer().pickMove();
+				move = getPlayer().pickMove();
 				if (move!=-1) {
 					getBoard().placePiece(move, getPlayer().color);
 					int y = getBoard().yFromPosition(move);
@@ -176,12 +200,14 @@ public class Game {
 					communicator.setToServer("zug("+ x + ", " + y + ").");
 					SwingUtilities.invokeLater( new Runnable() {
 					public void run() {
-						gameFrame.repaint();
+						gameFrame.revalidate();
 							}
 					});
 				}
 			} else {
 				moveNeeded = true;
+				setChanged();
+				notifyObservers();
 			}
 			
 		}
@@ -194,7 +220,7 @@ public class Game {
 		}
 		if (fromServer.equals("spielparameter?")) {
 			communicator.setToServer("spielparameter(" + getBoard().toString() + ", " + getBoard().level + ").");
-			
+			System.out.println("spielparameter geschickt");
 		}
 		if (fromServer.startsWith("name(")) {
 			setOpponentName(fromServer.substring(5, fromServer.length()-2));
@@ -214,7 +240,8 @@ public class Game {
 			level = intLevel;
 			System.out.println("farbe: " + fromServer.charAt(218));
 			player.setColor(fromServer.charAt(218));
-			board = new Board(boardName, level);
+			board = new Board(boardName);
+			board.setLevel(intLevel);
 			System.out.println("Gegner: " + fromServer.substring(220, fromServer.length()-2));;
 			setOpponentName(fromServer.substring(220, fromServer.length()-2));
 			opponentNameIsSet = true;
@@ -226,6 +253,7 @@ public class Game {
 			if (activePlayer == player.getColorAsChar()) {
 				System.out.println("Move needed");
 				moveNeeded = true;
+				notifyObservers();
 			}
 			return;
 		}
@@ -244,6 +272,8 @@ public class Game {
 		}
 		
 		if (fromServer.startsWith("zug")) {
+			String newBoard = fromServer.substring(4, 204);
+			board.findMove(newBoard);
 			board.readBoard(fromServer.substring(4, 204));
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
@@ -251,6 +281,7 @@ public class Game {
 				}
 			});
 			moveNeeded = true;
+			notifyObservers();
 		}
 		
 		if (fromServer.startsWith("spielende")) {
@@ -258,6 +289,9 @@ public class Game {
 		}
 		
 	}
+
+
+
 	
 	
 }

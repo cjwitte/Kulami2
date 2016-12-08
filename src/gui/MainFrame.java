@@ -127,30 +127,41 @@ public class MainFrame {
 		KIPanel.add(levelSlider, FlowLayout.LEFT);
 		KIPanel.add(KICheckbox, FlowLayout.LEFT);
 		frame.add(KIPanel, BorderLayout.LINE_END);
-	
-		frame.pack();
-		
+		frame.pack();		
 		boardBuilderBtn.addActionListener(new BordBuilderBtnListener());
 		boardLoaderBtn.addActionListener(new BoardLoaderBtnListener());
 		startGameBtn.addActionListener(new GameStartBtnListener());
+		
+		board = new Board(); 
 	}
 
 	public void setBoard (Board board) {
 		this.board = board;
 	}
 	
+	public void startBoardBuilderFrame () {
+		BoardBuilderFrame bbf = new BoardBuilderFrame(this);
+		bbf.setVisible(true);
+	}
 	class BordBuilderBtnListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("BordBuilder gestartet.");
-			BoardBuilderFrame bbf = new BoardBuilderFrame(this);
+			startBoardBuilderFrame();
 		}
+	}
+	
+	public String loadBoard(String filename) {
+		return "a0a0a0k0f0f0a0a0a0a0a0a0o0k0f0f0p0p0a0a0a0a0o0k0b0b0b0g0g0a0a0c0c0c0b0b0b0g0g0a0a0c0c0c0l0d0d0d0a0a0h0h0i0i0l0d0d0d0m0a0h0h0i0i0l0q0j0j0m0a0a0a0e0e0e0q0j0j0m0a0a0a0e0e0e0r0r0a0a0a0a0a0a0n0n0n0a0a0a0a0";
+		//TODO das Board tatsächlich laden.
 	}
 	
 	class BoardLoaderBtnListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Board laden.");
+			String loadedBoard = loadBoard(e.getActionCommand());
+			setBoard(new Board(loadedBoard));
 		}
 	}
 
@@ -158,17 +169,21 @@ public class MainFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Spiel starten.");
+			Player player = new Player(nameTextfield.getText());
 			int levelInt = Integer.parseInt(selectLevels.getSelectedItem().toString());
-			board = new Board(levelInt);
+			Board board = new Board("a0a0a0k0f0f0a0a0a0a0a0a0o0k0f0f0p0p0a0a0a0a0o0k0b0b0b0g0g0a0a0c0c0c0b0b0b0g0g0a0a0c0c0c0l0d0d0d0a0a0h0h0i0i0l0d0d0d0m0a0h0h0i0i0l0q0j0j0m0a0a0a0e0e0e0q0j0j0m0a0a0a0e0e0e0r0r0a0a0a0a0a0a0n0n0n0a0a0a0a0");
+
+			board.setLevel(levelInt);
 			if (KICheckbox.getState()) {
-				Player player = new KIPlayer(nameTextfield.getText(), levelSlider.getValue());
-			} else {
-				Player player = new Player(nameTextfield.getText());
-			}
-			Game game = new Game (Integer.parseInt(portField.getText()), hostnameField.getText(), Integer.parseInt(selectLevels.getSelectedItem().toString()),new Board("a0a0a0k0f0f0a0a0a0a0a0a0o0k0f0f0p0p0a0a0a0a0o0k0b0b0b0g0g0a0a0c0c0c0b0b0b0g0g0a0a0c0c0c0l0d0d0d0a0a0h0h0i0i0l0d0d0d0m0a0h0h0i0i0l0q0j0j0m0a0a0a0e0e0e0q0j0j0m0a0a0a0e0e0e0r0r0a0a0a0a0a0a0n0n0n0a0a0a0a0", 1) , player);
+				player = new KIPlayer(nameTextfield.getText(), levelSlider.getValue());
+			} 
+				
+			
+			Game game = new Game (Integer.parseInt(portField.getText()), hostnameField.getText(), Integer.parseInt(selectLevels.getSelectedItem().toString()), board , player);
 			game.getBoard().print();
 			GameFrame gameFrame = new GameFrame(game);
 			gameFrame.setVisible(true);
+			game.addObserver(gameFrame);
 		}
 	}
 

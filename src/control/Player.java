@@ -30,6 +30,10 @@ public class Player {
 		this.board = board;
 	}
 	
+	public int pickMove() {
+		
+	}
+	
 	public String getName() {
 		return name;
 	}

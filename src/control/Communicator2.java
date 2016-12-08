@@ -26,6 +26,7 @@ public class Communicator2 implements Runnable{
 		this.hostName = hostName;
 		this.game = game2;
 		this.toServer = "";
+		System.out.println("communicator erzeugt");
 	}
 
 	@Override
@@ -54,26 +55,28 @@ public class Communicator2 implements Runnable{
 			
 			while (!(fromServer).startsWith("spielende")) {
 				
-				System.out.println(fromServer);
+				System.out.println("fromServer: " + fromServer);
 		//		if (!fromServer.startsWith("message") && !fromServer.startsWith("spielermessage") ) {
 					game.handleServerInputInGame(fromServer);
 			/*	} else {
 					System.out.println(fromServer);
 				}*/
+				System.out.println("toServer: " + toServer);
 				if (!toServer.equals("")) {
 					System.out.println("schreibe: " + toServer);
 					out.println(toServer);
 					SwingUtilities.invokeLater( new Runnable() {
 						public void run() {
-							game.getGameFrame().repaint();
+							game.getGameFrame().revalidate();
 						}
 					});
 					toServer = "";
 				} 
 				fromServer = in.readLine();
 				if (fromServer == null) {
+					System.out.println("fromServer ist null");
 					fromServer = ("");
-				}
+				} 
 			}
 			if (fromServer.startsWith("spielende")) {
 				System.out.println("Spiel vorbei.");

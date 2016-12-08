@@ -17,9 +17,57 @@ public class Board implements Serializable {
 	String nextToLastMovesTile;
 	ArrayList<Tile> tileList;
 	public Tile a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r;
+	int level;
+	
+
+	public Board() {
+		this.state = new String[200];
+		this.initTiles();
+		for (int i = 0; i < 199; i+=2) {
+			this.state[i] = "a";
+		}
+		for (int i = 1; i <200; i+=2) {
+			this.state[i] = "0";
+		}
+		this.level = 0;
+	}
+	
+	public Board(String state) {
+		this.state = new String[200];
+		this.initTiles();
+		for (int i =0; i<200; i++) {
+			this.state[i] = state.substring(i, i+1);
+			Tile selectedTile = this.findTile(this.state[i]);
+			selectedTile.setPlaced(true);  //marks the Tile as places on the board.
+			// update the score of the Tile.
+			if (i<199 && state.substring(i+1, i+2).equals("2")) {
+				selectedTile.changeOwner(1);
+			} else if (i<199 && state.substring(i+1, i+2).equals("1")) {
+				selectedTile.changeOwner(-1);
+			}
+		}
+		this.updateScore(level);
+		
+	}
+	
+	public void readBoard (String state) {
+		for (int i =0; i<200; i++) {
+			this.state[i] = state.substring(i, i+1);
+			Tile selectedTile = this.findTile(this.state[i]);
+			selectedTile.setPlaced(true);  //marks the Tile as places on the board.
+			// update the score of the Tile.
+			if (i<199 && state.substring(i+1).equals("2")) {
+				selectedTile.changeOwner(1);
+			} else if (i<199 && state.substring(i+1).equals("1")) {
+				selectedTile.changeOwner(-1);
+			}
+		}
+		this.updateScore(level);
+	}
+
 	
 	public int getScore() {
-		updateScore();
+		updateScore(level);
 		return score;
 	}
 	
@@ -58,53 +106,9 @@ public class Board implements Serializable {
 		}
 		return stringbuilder.toString();
 	}
-
-	public Board() {
-		this.state = new String[200];
-		this.initTiles();
-		for (int i = 0; i < 199; i+=2) {
-			this.state[i] = "a";
-		}
-		for (int i = 1; i <200; i+=2) {
-			this.state[i] = "0";
-		}
-	}
-	
-	public Board(String state) {
-		this.state = new String[200];
-		this.initTiles();
-		for (int i =0; i<200; i++) {
-			this.state[i] = state.substring(i, i+1);
-			Tile selectedTile = this.findTile(this.state[i]);
-			selectedTile.setPlaced(true);  //marks the Tile as places on the board.
-			// update the score of the Tile.
-			if (i<199 && state.substring(i+1, i+2).equals("2")) {
-				selectedTile.changeOwner(1);
-			} else if (i<199 && state.substring(i+1, i+2).equals("1")) {
-				selectedTile.changeOwner(-1);
-			}
-		}
-		this.updateScore();
-		
-	}
-	
-	public void readBoard (String state) {
-		for (int i =0; i<200; i++) {
-			this.state[i] = state.substring(i, i+1);
-			Tile selectedTile = this.findTile(this.state[i]);
-			selectedTile.setPlaced(true);  //marks the Tile as places on the board.
-			// update the score of the Tile.
-			if (i<199 && state.substring(i+1).equals("2")) {
-				selectedTile.changeOwner(1);
-			} else if (i<199 && state.substring(i+1).equals("1")) {
-				selectedTile.changeOwner(-1);
-			}
-		}
-		this.updateScore();
-	}
 	/**
 	 * 
-	 * @param newBoard the new Board represendes as a String
+	 * @param newBoard the new Board represends as a String
 	 * @return returns the move the opponent just made as an int (1 to 100)
 	 */
 	public int findMove (String newBoard) {
@@ -207,6 +211,14 @@ public class Board implements Serializable {
 			lastMoves.push(lastMove);
 		}
 		return moves;
+	}
+	
+	public void setLevel (int level) {
+		this.level = level;
+	}
+	
+	public int getLevel () {
+		return level;
 	}
 	
 	/**

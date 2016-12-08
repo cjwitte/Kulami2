@@ -53,38 +53,6 @@ public class KIPlayer extends Player {
 		
 	}
 	
-/*	public int maxMove ( Board board, int depth ) {
-		if ( board.legalMoves().size()== 0 || depth == 0) {
-			return board.getScore();
-		}
-		else {
-			int bestMove = -10000;
-			ArrayList<Integer> legalMoves = board.legalMoves();
-			for ( Integer move: legalMoves) {
-				int max = minMove(board.placePiece(move, Color.RED), depth-1); //testMove()
-				if (move>bestMove) {
-					bestMove = max;
-				}
-			}
-			return bestMove;
-		}
-	}
-	
-	
-	public int minMove ( Board board, int depth) {
-		int bestMove = 10000;
-		ArrayList<Integer> legalMoves = board.legalMoves();
-		for (Integer move: legalMoves) {
-			int min = maxMove(board.placePiece(move, Color.BLACK), depth - 1);
-			if (move < bestMove) {
-				bestMove = min;
-			}
-		}
-		return bestMove;
-	}
-	
-	*/
-	
 	int pickedMove;
 	public int max (Board board, PlayerColor color, int depth) {
 		ArrayList<Integer> Moves = board.legalMoves();
