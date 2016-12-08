@@ -22,10 +22,7 @@ public class Game {
 	public Communicator2 communicator;
 	private String opponentName;
 	private char activePlayer;
-	private int selectedMove;
 	private boolean moveNeeded;
-	private int state;
-	private int move;
 	
 	private boolean opponentNameIsSet;
 	private boolean colorIsSet;
@@ -43,7 +40,6 @@ public class Game {
 		this.player = player;
 		this.communicator = new Communicator2(portNr, hostname, this);
 		this.activePlayer = player.getColorAsChar();
-		this.state = 0;
 		moveNeeded = false;
 		shouldWrite = false;
 		gameThread = new Thread(communicator);
@@ -65,34 +61,9 @@ public class Game {
 	public void setMyTurn(boolean myTurn) {
 		this.myTurn = myTurn;
 	}
-	
-	public void setMoveNeeded(boolean needed) {
-		moveNeeded = needed;
-	}
-	
-	public boolean getMoveNeeded() {
-		return moveNeeded;
-	}
-	
-	public int getMove() {
-		return move;
-	}
-	
-	public void setMove(int move) {
-		this.move = move;
-	}
-	
-	public int getState() {
-		return state;
-	}
-	
-	public void setState(int state) {
-		this.state = state;
-	}
-	
+
 	public void setActivePlayer(char playerColor) {
 		this.activePlayer = playerColor;
-
 	}
 	
 	public void nextPlayer() {
@@ -102,14 +73,6 @@ public class Game {
 			activePlayer = 'b';
 		}
 		
-	}
-	
-	public void setSelectedMove(int move) {
-		this.selectedMove = move;
-	}
-	
-	public int getSelectedMove() {
-		return selectedMove;
 	}
 	
 	public char getActivePlayer() {
@@ -122,9 +85,6 @@ public class Game {
 	
 	public String getOpponentName () {
 		return opponentName;
-	}
-	
-	public void pickMove() {
 	}
 	
 	public Board getBoard() {
