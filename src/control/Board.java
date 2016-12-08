@@ -64,19 +64,8 @@ public class Board implements Serializable {
 		return level;
 	}
 	
-
-	
 	public String getLevelAsString() {
-		switch(level) {
-		case 0:
-			return "0";
-		case 1:
-			return "1";
-		case 2:
-			return "2";
-		default:
-			return "";
-		}
+		return String.valueOf(level);
 	}
 	
 	public void setLevel(int level) {
@@ -152,10 +141,6 @@ public class Board implements Serializable {
 		if (level==2) {
 			score = score + findLines(PlayerColor.BLACK) - findLines(PlayerColor.RED);
 		}
-	}
-	
-	public String getTile ( int position ) {
-		return state[2*position-2];
 	}
 	
 	public void placePiece (int position, PlayerColor playerColor ) {
@@ -254,6 +239,10 @@ public class Board implements Serializable {
 	
 	public int ownerFromPosition (int position) {
 		return (position*2-1);
+	}
+	
+	public String getTile ( int position ) {
+		return state[2*position-2];
 	}
 	
 	/**
@@ -429,19 +418,6 @@ public class Board implements Serializable {
 			}
 		}
 		return matchingTile;
-	}
-	
-	public Board copyBoard() {
-		Board newBoard = new Board(level);
-		for (int i = 0; i< this.state.length; i++) {
-			newBoard.state[i] = this.state[i];
-		}
-		newBoard.tileList = this.tileList;
-		newBoard.score = this.score;
-		newBoard.lastMove = this.lastMove;
-		newBoard.lastMovesTile = this.lastMovesTile;
-		newBoard.nextToLastMovesTile = this.nextToLastMovesTile;
-		return newBoard;
 	}
 	
 	public void print() {
