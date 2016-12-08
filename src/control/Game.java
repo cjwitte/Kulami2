@@ -23,6 +23,7 @@ public class Game {
 	private String opponentName;
 	private char activePlayer;
 	private boolean moveNeeded;
+	private int level;
 	
 	private boolean opponentNameIsSet;
 	private boolean colorIsSet;
@@ -36,7 +37,7 @@ public class Game {
 		this.portNr = portNr;
 		this.hostname = hostname;
 		this.board = board;
-		this.board.level = level;
+		this.level = level;
 		this.player = player;
 		this.communicator = new Communicator2(portNr, hostname, this);
 		this.activePlayer = player.getColorAsChar();
@@ -210,10 +211,10 @@ public class Game {
 			System.out.println("board: " + boardName);
 			System.out.println(fromServer.substring(216,217));
 			int intLevel = Integer.parseInt(fromServer.substring(216,217));
-			board.setLevel(intLevel);
+			level = intLevel;
 			System.out.println("farbe: " + fromServer.charAt(218));
 			player.setColor(fromServer.charAt(218));
-			board = new Board(boardName, intLevel);
+			board = new Board(boardName, level);
 			System.out.println("Gegner: " + fromServer.substring(220, fromServer.length()-2));;
 			setOpponentName(fromServer.substring(220, fromServer.length()-2));
 			opponentNameIsSet = true;
