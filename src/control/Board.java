@@ -8,7 +8,6 @@ import control.Tile;
 
 public class Board implements Serializable {
 	
-	public int level; // 0: only Tiles count, 1: Tiles and areas count, 2: Tiles, areas and lines count
 	public String[] state;
 	private int score;
 	private int lastMove;
@@ -59,23 +58,10 @@ public class Board implements Serializable {
 		}
 		return stringbuilder.toString();
 	}
-	
-	public int getLevel() {
-		return level;
-	}
-	
-	public String getLevelAsString() {
-		return String.valueOf(level);
-	}
-	
-	public void setLevel(int level) {
-		this.level = level;
-	}
-	
-	public Board(int level) {
+
+	public Board() {
 		this.state = new String[200];
 		this.initTiles();
-		this.level = level;
 		for (int i = 0; i < 199; i+=2) {
 			this.state[i] = "a";
 		}
@@ -84,7 +70,7 @@ public class Board implements Serializable {
 		}
 	}
 	
-	public Board(String state, int level) {
+	public Board(String state) {
 		this.state = new String[200];
 		this.initTiles();
 		for (int i =0; i<200; i++) {
@@ -133,14 +119,18 @@ public class Board implements Serializable {
 	}
 	
 	
-	void updateScore() {
+	void updateScore(int level) {
 		score = 0;
 		for (Tile tile: tileList) {
 			score = score + tile.getTileScore();
 		}
+		if (level >=1) {
+			//TODO größte Fläche einrechnen
+		}
 		if (level==2) {
 			score = score + findLines(PlayerColor.BLACK) - findLines(PlayerColor.RED);
 		}
+
 	}
 	
 	public void placePiece (int position, PlayerColor playerColor ) {
