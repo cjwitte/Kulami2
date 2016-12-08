@@ -16,10 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-
 import control.Board;
 import control.Game;
 import control.KIPlayer;
@@ -45,6 +41,7 @@ public class MainFrame {
 	
 	String[] levels = {"0" , "1" , "2"};
 	JComboBox selectLevels = new JComboBox(levels);
+	
 	JButton boardLoaderBtn = new JButton ("Board laden");
 	JButton boardBuilderBtn = new JButton ("Board editieren");
 	JButton startGameBtn = new JButton ("Spiel starten");
@@ -54,8 +51,6 @@ public class MainFrame {
 	Checkbox KICheckbox = new Checkbox("KI-Modus", false);
 	JSlider levelSlider = new JSlider(JSlider.HORIZONTAL, 1, 9, 1);
 	JPanel KIPanel = new JPanel();
-	
-	
 	
 	Board board;
 	private JFrame frame;
@@ -123,15 +118,6 @@ public class MainFrame {
 		buttonPanel.add(boardBuilderBtn);
 		buttonPanel.add(boardLoaderBtn);
 		buttonPanel.add(startGameBtn);
-		
-		
-//		frame.add(boardBuilderBtn);
-//		frame.add(boardLoaderBtn);
-//		frame.add(namePanel);
-//		frame.add(hostPanel);
-//		frame.add(portPanel);
-//		frame.add(selectLevels);
-//		frame.add(startGameBtn);
 	
 		frame.add(buttonPanel, BorderLayout.SOUTH);
 		
@@ -143,9 +129,7 @@ public class MainFrame {
 		KIPanel.add(KICheckbox, FlowLayout.LEFT);
 		frame.add(KIPanel, BorderLayout.LINE_END);
 	
-		
 		frame.pack();
-		
 		
 		boardBuilderBtn.addActionListener(new BordBuilderBtnListener());
 		boardLoaderBtn.addActionListener(new BoardLoaderBtnListener());
@@ -174,22 +158,12 @@ public class MainFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Spiel starten.");
-			int levelInt = 0;
-			//parseInt!
-			String level = selectLevels.getSelectedItem().toString();
-			if (level.equals("0")) {
-				levelInt = 0;
-			} else if (level.equals("1")) {
-				levelInt = 1;
-			} else if (level.equals("2")) {
-				levelInt = 2;
-			}
-	//		board = new Board(levelInt);
-			Player player;
+			int levelInt = Integer.parseInt(selectLevels.getSelectedItem().toString());
+			board = new Board(levelInt);
 			if (KICheckbox.getState()) {
-				player = new KIPlayer(nameTextfield.getText(), levelSlider.getValue());
+				Player player = new KIPlayer(nameTextfield.getText(), levelSlider.getValue());
 			} else {
-				player = new Player(nameTextfield.getText());
+				Player player = new Player(nameTextfield.getText());
 			}
 			Game game = new Game (Integer.parseInt(portField.getText()), hostnameField.getText(), Integer.parseInt(selectLevels.getSelectedItem().toString()),new Board("a0a0a0k0f0f0a0a0a0a0a0a0o0k0f0f0p0p0a0a0a0a0o0k0b0b0b0g0g0a0a0c0c0c0b0b0b0g0g0a0a0c0c0c0l0d0d0d0a0a0h0h0i0i0l0d0d0d0m0a0h0h0i0i0l0q0j0j0m0a0a0a0e0e0e0q0j0j0m0a0a0a0e0e0e0r0r0a0a0a0a0a0a0n0n0n0a0a0a0a0", 1) , player);
 			game.run();
