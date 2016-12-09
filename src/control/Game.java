@@ -1,20 +1,10 @@
 package control;
 
-import java.beans.PropertyChangeSupport;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import gui.GameFrame;
+
 import java.util.Observable;
-import java.util.TimerTask;
 
 import javax.swing.SwingUtilities;
-
-import gui.GameFrame;
-import gui.MainFrame;
-import javafx.beans.InvalidationListener;
 
 
 public class Game extends Observable {
@@ -51,8 +41,8 @@ public class Game extends Observable {
 		moveNeeded = false;
 		shouldWrite = false;
 		System.out.println("game with Player " + player.getName() + "constructed");
-		GameFrame gameFrame = new GameFrame(this);
-		gameFrame.setVisible(false);
+		gameFrame = new GameFrame(this);
+		gameFrame.setVisible(true);
 		gameThread = new Thread(communicator);
 		gameThread.start();
 		System.out.println("game with Player " + player.getName() + "started");
@@ -80,11 +70,15 @@ public class Game extends Observable {
 	
 	public void nextPlayer() {
 		if (activePlayer == 'b' ) {
-			activePlayer = 'r';
-			System.out.println("nextPlayer: r");
+			activePlayer = 'r';		
+			System.out.println("================================================");
+			System.out.println("Game.nextPlayer(): nextPlayer: r");
+			System.out.println("================================================\n");
 		} else if (activePlayer == 'r') {
 			activePlayer = 'b';
-			System.out.println("nextPlayer: b");
+			System.out.println("================================================");
+			System.out.println("Game.nextPlayer(): nextPlayer: b");
+			System.out.println("================================================\n");
 		}
 		
 	}
@@ -135,16 +129,24 @@ public class Game extends Observable {
 	}
 	
 	public void handleServerInputInGame (String fromServer) {
+		System.out.println("================================================");
 		System.out.println("in Game");
+		System.out.println("================================================");
+		System.out.println("FROMSERVER: " + fromServer);
+		System.out.println("================================================\n");
 		if (fromServer.startsWith("spielstart(")) {
 			activePlayer = fromServer.charAt(11);
+			System.out.println("================================================");
 			System.out.println(player.getName());
 			System.out.println("activePlayer: " + activePlayer);
 			System.out.println("player.getColorAsChar(); " + player.getColorAsChar());
+			System.out.println("================================================\n");
 			
 			if (activePlayer == player.getColorAsChar()) {
 				myTurn = true;
+				System.out.println("================================================");
 				System.out.println("Move needed: " + player.getName());
+				System.out.println("================================================\n");
 				if (player instanceof KIPlayer) {
 					
 						move = getPlayer().pickMove();
@@ -161,7 +163,9 @@ public class Game extends Observable {
 						});
 					
 				} else {
+					System.out.println("================================================");
 						System.out.println("else no KI");
+						System.out.println("================================================\n");
 						moveNeeded = true;
 						setChanged();
 						notifyObservers();

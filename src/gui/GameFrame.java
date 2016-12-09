@@ -114,8 +114,9 @@ public class GameFrame extends JFrame {
 			Rectangle source = (Rectangle)e.getSource();
 			Thread thread = new Thread () {
 				public void run() {
-					System.out.println("clicked" + source.toString());
-					System.out.println("myTurn: " + game.getMyTurn());
+					System.out.println("================================================");
+					System.out.println("RML: clicked" + source.toString());
+					System.out.println("RML: myTurn: " + game.getMyTurn());
 					if (game.getBoard().legalMoves().contains(source.number) && game.getMyTurn())  {
 		
 						source.setColor(game.getPlayer().getColor());
@@ -124,7 +125,8 @@ public class GameFrame extends JFrame {
 						
 						int y = game.getBoard().yFromPosition(move);
 						int x = game.getBoard().xFromPosition(move);
-						System.out.println("Writing: " + "zug("+ x + "," + y + ").");
+						System.out.println("RML: Writing: " + "zug("+ x + "," + y + ").");
+						System.out.println("================================================");
 						game.communicator.setToServer("zug("+ x + "," + y + ").");
 						game.nextPlayer();
 					}

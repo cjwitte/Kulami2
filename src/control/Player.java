@@ -31,7 +31,7 @@ public class Player {
 	}
 	
 	public int pickMove() {
-		
+		throw new UnsupportedOperationException();
 	}
 	
 	public String getName() {

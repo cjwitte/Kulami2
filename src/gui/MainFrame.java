@@ -21,8 +21,6 @@ import control.Game;
 import control.KIPlayer;
 import control.Player;
 
-import com.jgoodies.forms.layout.FormSpecs;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -153,7 +151,7 @@ public class MainFrame {
 	
 	public String loadBoard(String filename) {
 		return "a0a0a0k0f0f0a0a0a0a0a0a0o0k0f0f0p0p0a0a0a0a0o0k0b0b0b0g0g0a0a0c0c0c0b0b0b0g0g0a0a0c0c0c0l0d0d0d0a0a0h0h0i0i0l0d0d0d0m0a0h0h0i0i0l0q0j0j0m0a0a0a0e0e0e0q0j0j0m0a0a0a0e0e0e0r0r0a0a0a0a0a0a0n0n0n0a0a0a0a0";
-		//TODO das Board tatsächlich laden.
+		//TODO das Board tatsï¿½chlich laden.
 	}
 	
 	class BoardLoaderBtnListener implements ActionListener {

@@ -8,6 +8,8 @@ import control.Tile;
 
 public class Board implements Serializable {
 	
+	private static final long serialVersionUID = 1515731394903542833L;
+	
 	public String[] state;
 	private int score;
 	private int lastMove;
@@ -328,47 +330,26 @@ public class Board implements Serializable {
 	public int findArea (int position) {
 		System.out.println("position: " + position);
 		int currentArea = 1;
-		int up = position -10;
-		int down = position +10;
-		int right = position+1;
-		int left = position-1;
 		areaChecked[position] = true;
 		if (xFromPosition(position)<9 && state[ownerFromPosition(position)].equals(state[ownerFromPosition(position+1)]) && !areaChecked[position+1]) {
 				int newPosition = ++position;
 				currentArea+=findArea(newPosition);			
 		} 
-		/*else if (xFromPosition(position)==9 && state[place].equals(state[place+2]) && !areaChecked[position-10]) {
-			currentArea++;
-		}*/
 		if (yFromPosition(position)<9 && state[ownerFromPosition(position)].equals(state[ownerFromPosition((position+10))]) && !areaChecked[position+10]) {			
 			
 			int newPosition = position+10;
 			currentArea+=findArea(newPosition);
 		} 
-		/*else if (yFromPosition(position)==9 && state[place].equals(state[place+20]) && !areaChecked[position-10]) {
-			currentArea++;
-			System.out.println((position+20));
-		}*/
 		
 		if (xFromPosition(position)>0 && state[ownerFromPosition(position)].equals(state[ownerFromPosition(position-1)]) && !areaChecked[position-1]) {
 			int newPosition = position-1;
 			currentArea+=findArea(newPosition);
 		}
-		
-		
-		/*else if (xFromPosition(position)==0 && state[place].equals(state[place-2]) && !areaChecked[position-10]) {
-			currentArea++;
-			System.out.println((position-2));
-		}*/
 		if (yFromPosition(position)>0 && state[ownerFromPosition(position)].equals(state[ownerFromPosition(position-10)]) && !areaChecked[position-10])  {
 			int newPosition = position-10;
 			currentArea+=findArea(newPosition);
 			
 		} 
-		/*else if (yFromPosition(position)==0 && state[place].equals(state[place-20]) && !areaChecked[position-10]) {
-			currentArea++;
-			System.out.println((position-20));
-		}*/
 		return currentArea;
 	}
 	

@@ -40,7 +40,7 @@ public class GuiTest {
 		boardPanel.setLayout(new GridLayout(10,10,0,0));
 		/*
 		for (Rectangle rectangle: boardPanel.allRectangles) {
-			if (rectangle.getPlaced()) {
+			if (rectangle.getPlaced()) {	
 				rectangle.addMouseListener(new RectangleMouseListener());
 			}
 		}
