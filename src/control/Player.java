@@ -3,6 +3,7 @@ package control;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.UnsupportedOperationException;
 
 public class Player {
 	
@@ -31,7 +32,7 @@ public class Player {
 	}
 	
 	public int pickMove() {
-		
+		throw new UnsupportedOperationException();
 	}
 	
 	public String getName() {
