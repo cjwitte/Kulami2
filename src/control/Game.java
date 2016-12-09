@@ -146,19 +146,22 @@ public class Game extends Observable {
 				myTurn = true;
 				System.out.println("Move needed: " + player.getName());
 				if (player instanceof KIPlayer) {
-					
-						move = getPlayer().pickMove();
-						int y = getBoard().yFromPosition(move);
-						int x = getBoard().xFromPosition(move);
+						try {
+						} catch (UnsupportedOperationEcxeption e) {
+							move = getPlayer().pickMove();
+							int y = getBoard().yFromPosition(move);
+							int x = getBoard().xFromPosition(move);
 
-						board.placePiece(move, getPlayer().color);
+							board.placePiece(move, getPlayer().color);
 						
-						communicator.setToServer("zug("+ x + ", " + y + ").");
-						SwingUtilities.invokeLater( new Runnable() {
-							public void run() {
-								gameFrame.revalidate();
-							}
-						});
+							communicator.setToServer("zug("+ x + ", " + y + ").");
+							SwingUtilities.invokeLater( new Runnable() {
+								public void run() {
+									gameFrame.revalidate();
+								}
+							});
+						}
+						
 					
 				} else {
 						System.out.println("else no KI");
